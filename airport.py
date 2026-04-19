@@ -128,7 +128,6 @@ def PlotAirports(airports):
     else:
         pyplot.bar("Airports", cuantos_schengen, color="blue", label="Schengen")
         pyplot.bar("Airports", cuantos_no_schengen, bottom=cuantos_schengen, color="red", label="No Schengen")
-
         pyplot.ylabel("Count")
         pyplot.title("Schengen airports")
         pyplot.legend()
