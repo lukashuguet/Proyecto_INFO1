@@ -62,7 +62,7 @@ def LoadAirports(filename):
         actual_airport = Airport(code, lat_deg, lon_dec)
         list_airports.append(actual_airport)
         linea = Fichero.readline()
-    fichero.close()
+    Fichero.close()
     return list_airports
 def SaveSchengenAirports(airports, filename):
     if len(airports) == 0:
@@ -72,10 +72,10 @@ def SaveSchengenAirports(airports, filename):
         Fichero_editado.write("CODE LAT LON")
         i = 0
         while i < len(airports):
-            actual_airport = airports[i]
-            if actual_airport.schengen == True:
+            aeropuerto_actual = airports[i]
+            if aeropuerto_actual.schengen == True:
                 linea_w = aeropuerto_actual.code + " " + str(aeropuerto_actual.lat) + " " + str(aeropuerto_actual.lon) + "\n"
-                f.write(linea_w)
+                Fichero_editado.write(linea_w)
             i = i + 1
         Fichero_editado.close()
         print("Fichero guardado")
@@ -94,9 +94,22 @@ def AddAirport(airports, airport):
         print("El aeropuerto con código ", airport.code, " ya existe")
 
 def RemoveAirport(airports, code):
+    lista_limpia = []
     encontrado = False
     i = 0
     while i < len(airports) and not encontrado:
+        if airports[i].code == code:
+            encontrado = True
+        else:
+            lista_limpia.append(airports[i])
+    while i < len(airports):
+        lista_limpia.append(airports[i])
+        i = i + 1
+    if encontrado:
+        airports[:] = lista_limpia
+        print("Aeropuerto", code, "eliminado.")
+    else:
+        print("El aeropuerto no existe")
 
 
 
