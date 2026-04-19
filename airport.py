@@ -111,6 +111,29 @@ def RemoveAirport(airports, code):
     else:
         print("El aeropuerto no existe")
 
+import matplotlib.pyplot as pyplot
+def PlotAirports(airports):
+    cuantos_schengen = 0
+    cuantos_no_schengen = 0
+    i = 0
+    while i < len(airports):
+        if airports[i].schengen == True:
+            cuantos_schengen = cuantos_schengen + 1
+        else:
+            cuantos_no_schengen = cuantos_no_schengen + 1
+        i = i + 1
+
+    if len(airports) == 0:
+        print("Error:No hay aeropuertos")
+    else:
+        pyplot.bar("Airports", cuantos_schengen, color="blue", label="Schengen")
+        pyplot.bar("Airports", cuantos_no_schengen, bottom=cuantos_schengen, color="red", label="No Schengen")
+
+        pyplot.ylabel("Count")
+        pyplot.title("Schengen airports")
+        pyplot.legend()
+        pyplot.show()
+
 
 
 
