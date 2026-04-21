@@ -1,146 +1,235 @@
+import matplotlib.pyplot as plt
+
+
 class Airport:
-    def __init__(self, code, latitude, longitude):
-        self.code = code
-        self.latitude = latitude
-        self.longitude = longitude
+    def __init__(self, icao, lat, lon):
+        self.icao = icao
+        self.coordinates = (lat, lon)
         self.schengen = False
 
+
+# --------------------------------------------------
+# SCHENGEN
+# --------------------------------------------------
+
 def IsSchengenAirport(code):
-    if code == "":
-        schengen = False
-        return schengen
-    schengen_codes = [ 'LO', 'EB', 'LK', 'LC', 'EK', 'EE', 'EF', 'LF', 'ED', 'LG', 'EH', 'LH',
-'BI','LI', 'EV', 'EY', 'EL', 'LM', 'EN', 'EP', 'LP', 'LZ', 'LJ', 'LE', 'ES',
-'LS']
-    prefix = code[0:2]
-    if prefix in schengen_codes:
-        schengen = True
-        return schengen
-    else:
-        schengen = False
-        return schengen
+
+    if not code:
+        return False
+
+    schengen_prefixes = [
+        'LO', 'EB', 'LK', 'LC', 'EK', 'EE', 'EF', 'LF', 'ED', 'LG',
+        'EH', 'LH', 'BI', 'LI', 'EV', 'EY', 'EL', 'LM', 'EN', 'EP',
+        'LP', 'LZ', 'LJ', 'LE', 'ES', 'LS'
+    ]
+
+    return code[:2] in schengen_prefixes
+
 
 def SetSchengen(airport):
-    status = IsSchengenAirport(airport.code)
-    airport.schengen = status
+    airport.schengen = IsSchengenAirport(airport.icao)
+
 
 def PrintAirport(airport):
-    print("Código ICAO:", airport.code)
-    print("Latitud:", airport.latitude)
-    print("Longitud:", airport.longitude)
+    print("ICAO:", airport.icao)
+    print("Coordinates:", airport.coordinates)
     print("Schengen:", airport.schengen)
+    print()
+
+
+# --------------------------------------------------
+# FILE FUNCTIONS
+# --------------------------------------------------
 
 def LoadAirports(filename):
-    list_airports = []
-    Fichero = open(filename, 'r')
-    linea = Fichero.readline() #Esta primera es para saltar la linea donde pone lo de CODE LAT LON
-    linea = Fichero.readline()
 
-    while linea != "":
-        datos = linea.split()
-        if len(datos) >=3:
-            code = datos[0]
-            lat_txt = datos[1]
-            lon_txt = datos[2]
+    airports = []
 
-            #Aqui convertimos el texto de la latitud en Float y lo pasamos a formato de grados decimales
-            lat_deg = float(lat_txt[1:3])
-            lat_min = float(lat_txt[3:5])
-            lat_sec = float(lat_txt[5:7])
-            lat_dec = lat_deg + (lat_min / 60) + (lat_sec / 3600)#Esta es la que los pasa a grados decimales, es como la formula
-            if lat_txt[0] == 'S':
-                lat_dec = -lat_dec #Cuando es hacia el sud las coordenadas canvian de signo
+    try:
+        file = open(filename, "r")
+    except:
+        return airports
 
-            #Aqui hacemos lo mimso pero con la longitud
-            lon_deg = float(lon_txt[1:3])
-            lon_min = float(lon_txt[3:5])
-            lon_sec = float(lon_txt[5:7])
-            lon_dec = lon_deg + (lon_min / 60) + (lon_sec / 3600)
-            if lon_txt[0] == 'W':
-                lon_dec = -lon_dec
+    lines = file.readlines()
+    file.close()
 
-        actual_airport = Airport(code, lat_deg, lon_dec)
-        list_airports.append(actual_airport)
-        linea = Fichero.readline()
-    Fichero.close()
-    return list_airports
+    for line in lines:
+        line = line.strip()
+
+        if not line or line.startswith("CODE"):
+            continue
+
+        parts = line.split()
+
+        if len(parts) != 3:
+            continue
+
+        code = parts[0]
+        lat = ConvertCoord(parts[1])
+        lon = ConvertCoord(parts[2])
+
+        airport = Airport(code, lat, lon)
+        airports.append(airport)
+
+    return airports
+
+
 def SaveSchengenAirports(airports, filename):
-    if len(airports) == 0:
-        print("Error:No hay ningun aeropuerto")
-    else:
-        Fichero_editado = open(filename, 'w')
-        Fichero_editado.write("CODE LAT LON")
-        i = 0
-        while i < len(airports):
-            aeropuerto_actual = airports[i]
-            if aeropuerto_actual.schengen == True:
-                linea_w = aeropuerto_actual.code + " " + str(aeropuerto_actual.lat) + " " + str(aeropuerto_actual.lon) + "\n"
-                Fichero_editado.write(linea_w)
-            i = i + 1
-        Fichero_editado.close()
-        print("Fichero guardado")
+
+    if not airports:
+        return -1
+
+    file = open(filename, "w")
+
+    file.write("CODE LAT LON\n")
+
+    for airport in airports:
+        if airport.schengen:
+            lat_str = FormatCoord(airport.coordinates[0], True)
+            lon_str = FormatCoord(airport.coordinates[1], False)
+
+            file.write(f"{airport.icao} {lat_str} {lon_str}\n")
+
+    file.close()
+
+
+# --------------------------------------------------
+# LIST MANAGEMENT
+# --------------------------------------------------
 
 def AddAirport(airports, airport):
-    existe = False
-    i = 0
-    while i < len(airports):
-        if airports[i].code == airport.code:
-            existe = True
-        i = i + 1
-    if existe == False:
-        airports.append(airport)
-        print("Aeropuerto añadido con éxito")
-    else:
-        print("El aeropuerto con código ", airport.code, " ya existe")
+
+    for a in airports:
+        if a.icao == airport.icao:
+            return
+
+    airports.append(airport)
+
 
 def RemoveAirport(airports, code):
-    lista_limpia = []
-    encontrado = False
-    i = 0
-    while i < len(airports) and not encontrado:
-        if airports[i].code == code:
-            encontrado = True
-        else:
-            lista_limpia.append(airports[i])
-    while i < len(airports):
-        lista_limpia.append(airports[i])
-        i = i + 1
-    if encontrado:
-        airports[:] = lista_limpia
-        print("Aeropuerto", code, "eliminado.")
-    else:
-        print("El aeropuerto no existe")
 
-import matplotlib.pyplot as pyplot
+    for a in airports:
+        if a.icao == code:
+            airports.remove(a)
+            return
+
+    return -1
+
+
+# --------------------------------------------------
+# PLOT
+# --------------------------------------------------
+
 def PlotAirports(airports):
-    cuantos_schengen = 0
-    cuantos_no_schengen = 0
-    i = 0
-    while i < len(airports):
-        if airports[i].schengen == True:
-            cuantos_schengen = cuantos_schengen + 1
+
+    if not airports:
+        print("No data to plot")
+        return
+
+    schengen_count = sum(1 for a in airports if a.schengen)
+    no_schengen_count = len(airports) - schengen_count
+
+    labels = ['Airports']
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+
+    ax.bar(labels, [schengen_count], label='Schengen')
+    ax.bar(labels, [no_schengen_count],
+           bottom=[schengen_count],
+           label='No Schengen')
+
+    ax.set_ylabel('Count')
+    ax.set_title('Schengen airports')
+    ax.legend()
+
+    plt.show()
+
+
+# --------------------------------------------------
+# MAP (KML)
+# --------------------------------------------------
+
+def MapAirports(airports):
+
+    if not airports:
+        print("Error: empty list")
+        return
+
+    file = open("airports.kml", "w")
+
+    file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+    file.write('<kml xmlns="http://www.opengis.net/kml/2.2">\n')
+    file.write('<Document>\n')
+
+    for airport in airports:
+
+        lat = airport.coordinates[0]
+        lon = airport.coordinates[1]
+
+        if airport.schengen:
+            color = "ff0000ff"  # rojo
         else:
-            cuantos_no_schengen = cuantos_no_schengen + 1
-        i = i + 1
+            color = "ff00ff00"  # verde
 
-    if len(airports) == 0:
-        print("Error:No hay aeropuertos")
+        file.write('<Placemark>\n')
+        file.write(f'<name>{airport.icao}</name>\n')
+        file.write('<Style><IconStyle>\n')
+        file.write(f'<color>{color}</color>\n')
+        file.write('</IconStyle></Style>\n')
+        file.write('<Point>\n')
+        file.write(f'<coordinates>{lon},{lat},0</coordinates>\n')
+        file.write('</Point>\n')
+        file.write('</Placemark>\n')
+
+    file.write('</Document>\n')
+    file.write('</kml>\n')
+
+    file.close()
+
+    print("File airports.kml created.")
+
+
+# --------------------------------------------------
+# COORDINATE FUNCTIONS
+# --------------------------------------------------
+
+def ConvertCoord(coord):
+
+    direction = coord[0]
+    value = coord[1:]
+
+    if len(value) == 6:  # lat
+        degrees = int(value[0:2])
+        minutes = int(value[2:4])
+        seconds = int(value[4:6])
+    else:  # lon
+        degrees = int(value[0:3])
+        minutes = int(value[3:5])
+        seconds = int(value[5:7])
+
+    decimal = degrees + minutes / 60 + seconds / 3600
+
+    if direction in ['S', 'W']:
+        decimal = -decimal
+
+    return decimal  # 🔥 MUY IMPORTANTE
+
+
+def FormatCoord(value, is_lat):
+
+    if is_lat:
+        direction = 'N' if value >= 0 else 'S'
     else:
-        pyplot.bar("Airports", cuantos_schengen, color="blue", label="Schengen")
-        pyplot.bar("Airports", cuantos_no_schengen, bottom=cuantos_schengen, color="red", label="No Schengen")
-        pyplot.ylabel("Count")
-        pyplot.title("Schengen airports")
-        pyplot.legend()
-        pyplot.show()
+        direction = 'E' if value >= 0 else 'W'
 
+    value = abs(value)
 
+    degrees = int(value)
+    minutes_full = (value - degrees) * 60
+    minutes = int(minutes_full)
+    seconds = int((minutes_full - minutes) * 60)
 
-
-
-
-
-
-
-
-
-
+    if is_lat:
+        return f"{direction}{degrees:02d}{minutes:02d}{seconds:02d}"
+    else:
+        return f"{direction}{degrees:03d}{minutes:02d}{seconds:02d}"
