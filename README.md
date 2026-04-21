@@ -8,7 +8,7 @@ La gestión de la información se apoya en un robusto sistema de procesamiento d
 
 También se generan gráficos de barras comparativos para analizar la distribución de aeropuertos y crean archivos compatibles con Google Earth, permitiendo mapear las ubicaciones con códigos de colores diferenciados. Todo este conjunto de funcionalidades se unifica bajo una interfaz gráfica amigable desarrollada en Tkinter, lo que permite que cualquier usuario opere el sistema de forma intuitiva sin necesidad de interactuar directamente con el código fuente.
 
-#Versión 2 
+# Versión 2 
 
 La segunda versión amplía su alcance a la gestión de vuelos con destino a Barcelona (LEBL). Mediante la nueva clase Aircraft, el sistema procesa datos críticos como el identificador de vuelo, la aerolínea y la hora de llegada, incluyendo un motor de validación que descarta automáticamente registros erróneos o incompletos.
 
