@@ -4,7 +4,7 @@
 <Placemark>
 <name>BIKF</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-22.605555555555558,63.985,0</coordinates>
@@ -49,7 +49,7 @@
 <Placemark>
 <name>EBAW</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>4.460277777777778,51.18944444444444,0</coordinates>
@@ -58,7 +58,7 @@
 <Placemark>
 <name>EBBR</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>4.484444444444445,50.90138888888889,0</coordinates>
@@ -67,7 +67,7 @@
 <Placemark>
 <name>EBLG</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>5.442777777777778,50.63638888888889,0</coordinates>
@@ -76,7 +76,7 @@
 <Placemark>
 <name>EBOS</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>2.8622222222222224,51.19888888888889,0</coordinates>
@@ -85,7 +85,7 @@
 <Placemark>
 <name>EDDB</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>13.500555555555556,52.36222222222222,0</coordinates>
@@ -94,7 +94,7 @@
 <Placemark>
 <name>EDDF</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>8.570555555555556,50.03333333333333,0</coordinates>
@@ -103,7 +103,7 @@
 <Placemark>
 <name>EDDH</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>9.988333333333333,53.63027777777778,0</coordinates>
@@ -112,7 +112,7 @@
 <Placemark>
 <name>EDDK</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>7.142777777777778,50.865833333333335,0</coordinates>
@@ -121,7 +121,7 @@
 <Placemark>
 <name>EDDL</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>6.7572222222222225,51.280833333333334,0</coordinates>
@@ -130,7 +130,7 @@
 <Placemark>
 <name>EDDM</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>11.786111111111111,48.35388888888889,0</coordinates>
@@ -139,7 +139,7 @@
 <Placemark>
 <name>EDDN</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>11.078055555555554,49.49861111111111,0</coordinates>
@@ -148,7 +148,7 @@
 <Placemark>
 <name>EDDP</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>12.236388888888888,51.42388888888889,0</coordinates>
@@ -157,7 +157,7 @@
 <Placemark>
 <name>EDDS</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>9.221944444444444,48.69,0</coordinates>
@@ -166,7 +166,7 @@
 <Placemark>
 <name>EDDT</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>13.287777777777778,52.55972222222222,0</coordinates>
@@ -175,7 +175,7 @@
 <Placemark>
 <name>EDDV</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>9.68361111111111,52.46027777777778,0</coordinates>
@@ -184,7 +184,7 @@
 <Placemark>
 <name>EETN</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>24.8325,59.413333333333334,0</coordinates>
@@ -193,7 +193,7 @@
 <Placemark>
 <name>EFHK</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>24.96333333333333,60.31722222222223,0</coordinates>
@@ -355,7 +355,7 @@
 <Placemark>
 <name>EHAM</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>4.764166666666667,52.308055555555555,0</coordinates>
@@ -364,7 +364,7 @@
 <Placemark>
 <name>EHEH</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>5.374444444444444,51.45,0</coordinates>
@@ -373,7 +373,7 @@
 <Placemark>
 <name>EHRD</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>4.437222222222222,51.956944444444446,0</coordinates>
@@ -391,7 +391,7 @@
 <Placemark>
 <name>EKBI</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>9.151666666666667,55.74027777777778,0</coordinates>
@@ -400,7 +400,7 @@
 <Placemark>
 <name>EKCH</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>12.65611111111111,55.61805555555556,0</coordinates>
@@ -409,7 +409,7 @@
 <Placemark>
 <name>ELLX</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>6.204444444444444,49.623333333333335,0</coordinates>
@@ -418,7 +418,7 @@
 <Placemark>
 <name>ENBR</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>5.218055555555556,60.29361111111111,0</coordinates>
@@ -427,7 +427,7 @@
 <Placemark>
 <name>ENGM</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>11.08388888888889,60.20277777777778,0</coordinates>
@@ -436,7 +436,7 @@
 <Placemark>
 <name>EPKK</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>19.784722222222225,50.07777777777778,0</coordinates>
@@ -445,7 +445,7 @@
 <Placemark>
 <name>EPKT</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>19.08,50.47416666666667,0</coordinates>
@@ -454,7 +454,7 @@
 <Placemark>
 <name>EPWA</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>20.96722222222222,52.16583333333333,0</coordinates>
@@ -463,7 +463,7 @@
 <Placemark>
 <name>ESGG</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>12.29111111111111,57.66,0</coordinates>
@@ -472,7 +472,7 @@
 <Placemark>
 <name>ESKN</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>16.90361111111111,58.78861111111111,0</coordinates>
@@ -481,7 +481,7 @@
 <Placemark>
 <name>ESSA</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>17.91861111111111,59.651944444444446,0</coordinates>
@@ -499,7 +499,7 @@
 <Placemark>
 <name>EVRA</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>23.97111111111111,56.92361111111111,0</coordinates>
@@ -508,7 +508,7 @@
 <Placemark>
 <name>EYVI</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>25.28777777777778,54.636944444444445,0</coordinates>
@@ -688,7 +688,7 @@
 <Placemark>
 <name>LCLK</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>33.63027777777778,34.87888888888889,0</coordinates>
@@ -724,7 +724,7 @@
 <Placemark>
 <name>LEAL</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-0.5580555555555556,38.282222222222224,0</coordinates>
@@ -733,7 +733,7 @@
 <Placemark>
 <name>LEAM</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-2.37,36.84388888888889,0</coordinates>
@@ -742,7 +742,7 @@
 <Placemark>
 <name>LEAS</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-6.034722222222222,43.56361111111111,0</coordinates>
@@ -751,7 +751,7 @@
 <Placemark>
 <name>LEBB</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-2.9105555555555553,43.301111111111105,0</coordinates>
@@ -760,7 +760,7 @@
 <Placemark>
 <name>LEBL</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>2.0783333333333336,41.29694444444444,0</coordinates>
@@ -769,7 +769,7 @@
 <Placemark>
 <name>LEBZ</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-6.8213888888888885,38.89138888888889,0</coordinates>
@@ -778,7 +778,7 @@
 <Placemark>
 <name>LECO</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-8.377222222222223,43.301944444444445,0</coordinates>
@@ -787,7 +787,7 @@
 <Placemark>
 <name>LEGE</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>2.7605555555555554,41.90083333333333,0</coordinates>
@@ -796,7 +796,7 @@
 <Placemark>
 <name>LEGR</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-3.777222222222222,37.18861111111111,0</coordinates>
@@ -805,7 +805,7 @@
 <Placemark>
 <name>LEIB</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>1.3730555555555557,38.87277777777778,0</coordinates>
@@ -814,7 +814,7 @@
 <Placemark>
 <name>LEJR</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-6.06,36.74472222222222,0</coordinates>
@@ -823,7 +823,7 @@
 <Placemark>
 <name>LELN</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-5.6561111111111115,42.58861111111111,0</coordinates>
@@ -832,7 +832,7 @@
 <Placemark>
 <name>LEMD</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-3.560833333333333,40.47222222222222,0</coordinates>
@@ -841,7 +841,7 @@
 <Placemark>
 <name>LEMG</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-4.4991666666666665,36.675,0</coordinates>
@@ -850,7 +850,7 @@
 <Placemark>
 <name>LEMH</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>4.2186111111111115,39.862500000000004,0</coordinates>
@@ -859,7 +859,7 @@
 <Placemark>
 <name>LEPA</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>2.738888888888889,39.55166666666666,0</coordinates>
@@ -868,7 +868,7 @@
 <Placemark>
 <name>LESO</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-1.7905555555555555,43.35638888888889,0</coordinates>
@@ -877,7 +877,7 @@
 <Placemark>
 <name>LEST</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-8.415277777777778,42.896388888888886,0</coordinates>
@@ -886,7 +886,7 @@
 <Placemark>
 <name>LEVC</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-0.4816666666666667,39.489444444444445,0</coordinates>
@@ -895,7 +895,7 @@
 <Placemark>
 <name>LEVD</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-4.851944444444444,41.70611111111111,0</coordinates>
@@ -904,7 +904,7 @@
 <Placemark>
 <name>LEVX</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-8.627500000000001,42.22916666666667,0</coordinates>
@@ -913,7 +913,7 @@
 <Placemark>
 <name>LEXJ</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-3.82,43.426944444444445,0</coordinates>
@@ -922,7 +922,7 @@
 <Placemark>
 <name>LEZL</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-5.898888888888888,37.418055555555554,0</coordinates>
@@ -931,7 +931,7 @@
 <Placemark>
 <name>LFBD</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-0.7152777777777777,44.828611111111115,0</coordinates>
@@ -940,7 +940,7 @@
 <Placemark>
 <name>LFBT</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-0.002777777777777778,43.18555555555555,0</coordinates>
@@ -949,7 +949,7 @@
 <Placemark>
 <name>LFCK</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>2.2905555555555552,43.555,0</coordinates>
@@ -958,7 +958,7 @@
 <Placemark>
 <name>LFLL</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>5.0811111111111105,45.72555555555556,0</coordinates>
@@ -967,7 +967,7 @@
 <Placemark>
 <name>LFMD</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>6.954166666666667,43.546388888888885,0</coordinates>
@@ -976,7 +976,7 @@
 <Placemark>
 <name>LFML</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>5.215,43.43666666666666,0</coordinates>
@@ -985,7 +985,7 @@
 <Placemark>
 <name>LFMN</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>7.215,43.665277777777774,0</coordinates>
@@ -994,7 +994,7 @@
 <Placemark>
 <name>LFOB</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>2.112777777777778,49.45444444444445,0</coordinates>
@@ -1003,7 +1003,7 @@
 <Placemark>
 <name>LFPG</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>2.5477777777777777,49.00972222222222,0</coordinates>
@@ -1012,7 +1012,7 @@
 <Placemark>
 <name>LFPO</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>2.3794444444444447,48.723333333333336,0</coordinates>
@@ -1021,7 +1021,7 @@
 <Placemark>
 <name>LFQQ</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>3.0869444444444447,50.56333333333333,0</coordinates>
@@ -1030,7 +1030,7 @@
 <Placemark>
 <name>LFRN</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-1.7322222222222223,48.07194444444445,0</coordinates>
@@ -1039,7 +1039,7 @@
 <Placemark>
 <name>LFRS</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-1.607777777777778,47.15694444444444,0</coordinates>
@@ -1048,7 +1048,7 @@
 <Placemark>
 <name>LFSB</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>7.529166666666667,47.59,0</coordinates>
@@ -1057,7 +1057,7 @@
 <Placemark>
 <name>LFST</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>7.634444444444444,48.54194444444444,0</coordinates>
@@ -1066,7 +1066,7 @@
 <Placemark>
 <name>LGAV</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>23.944444444444446,37.93666666666666,0</coordinates>
@@ -1075,7 +1075,7 @@
 <Placemark>
 <name>LGIR</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>25.18027777777778,35.33972222222222,0</coordinates>
@@ -1084,7 +1084,7 @@
 <Placemark>
 <name>LGKR</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>19.91222222222222,39.60194444444445,0</coordinates>
@@ -1093,7 +1093,7 @@
 <Placemark>
 <name>LGMK</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>25.34722222222222,37.43722222222222,0</coordinates>
@@ -1102,7 +1102,7 @@
 <Placemark>
 <name>LGSR</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>25.479166666666664,36.399166666666666,0</coordinates>
@@ -1111,7 +1111,7 @@
 <Placemark>
 <name>LGTS</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>22.97083333333333,40.51972222222222,0</coordinates>
@@ -1120,7 +1120,7 @@
 <Placemark>
 <name>LHBP</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>19.261944444444445,47.43944444444444,0</coordinates>
@@ -1129,7 +1129,7 @@
 <Placemark>
 <name>LIBD</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>16.765,41.13805555555555,0</coordinates>
@@ -1138,7 +1138,7 @@
 <Placemark>
 <name>LICJ</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>13.099444444444446,38.18194444444444,0</coordinates>
@@ -1147,7 +1147,7 @@
 <Placemark>
 <name>LIEE</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>9.056111111111111,39.24722222222222,0</coordinates>
@@ -1156,7 +1156,7 @@
 <Placemark>
 <name>LIEO</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>9.517777777777779,40.89861111111111,0</coordinates>
@@ -1165,7 +1165,7 @@
 <Placemark>
 <name>LIMC</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>8.723055555555556,45.63,0</coordinates>
@@ -1174,7 +1174,7 @@
 <Placemark>
 <name>LIME</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>9.700277777777776,45.66888888888889,0</coordinates>
@@ -1183,7 +1183,7 @@
 <Placemark>
 <name>LIMF</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>7.649444444444444,45.2025,0</coordinates>
@@ -1192,7 +1192,7 @@
 <Placemark>
 <name>LIML</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>9.278333333333334,45.44944444444444,0</coordinates>
@@ -1201,7 +1201,7 @@
 <Placemark>
 <name>LIPE</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>11.296944444444444,44.530833333333334,0</coordinates>
@@ -1210,7 +1210,7 @@
 <Placemark>
 <name>LIPH</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>12.197777777777778,45.65083333333333,0</coordinates>
@@ -1219,7 +1219,7 @@
 <Placemark>
 <name>LIPX</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>10.887777777777778,45.396388888888886,0</coordinates>
@@ -1228,7 +1228,7 @@
 <Placemark>
 <name>LIPZ</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>12.351944444444444,45.50527777777778,0</coordinates>
@@ -1237,7 +1237,7 @@
 <Placemark>
 <name>LIRF</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>12.238888888888889,41.80027777777777,0</coordinates>
@@ -1246,7 +1246,7 @@
 <Placemark>
 <name>LIRN</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>14.290833333333333,40.88444444444444,0</coordinates>
@@ -1255,7 +1255,7 @@
 <Placemark>
 <name>LIRP</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>10.395555555555555,43.68277777777777,0</coordinates>
@@ -1264,7 +1264,7 @@
 <Placemark>
 <name>LIRQ</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>11.202777777777778,43.808611111111105,0</coordinates>
@@ -1273,7 +1273,7 @@
 <Placemark>
 <name>LKPR</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>14.26,50.100833333333334,0</coordinates>
@@ -1291,7 +1291,7 @@
 <Placemark>
 <name>LMML</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>14.477500000000001,35.8575,0</coordinates>
@@ -1300,7 +1300,7 @@
 <Placemark>
 <name>LOWW</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>16.56972222222222,48.11027777777778,0</coordinates>
@@ -1309,7 +1309,7 @@
 <Placemark>
 <name>LPPR</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-8.678055555555554,41.23555555555556,0</coordinates>
@@ -1318,7 +1318,7 @@
 <Placemark>
 <name>LPPT</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>-9.134166666666665,38.774166666666666,0</coordinates>
@@ -1345,7 +1345,7 @@
 <Placemark>
 <name>LSGG</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>6.109444444444444,46.23833333333334,0</coordinates>
@@ -1354,7 +1354,7 @@
 <Placemark>
 <name>LSZG</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>7.416388888888889,47.18138888888889,0</coordinates>
@@ -1363,7 +1363,7 @@
 <Placemark>
 <name>LSZH</name>
 <Style><IconStyle>
-<color>ff0000ff</color>
+<color>ff00ff00</color>
 </IconStyle></Style>
 <Point>
 <coordinates>8.548055555555555,47.45805555555556,0</coordinates>
