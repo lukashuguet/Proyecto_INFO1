@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 from airport import *
 import math
+
+# Clase que representa un avión/vuelo con sus datos básicos
 class Aircraft:
     def __init__(self, id, airline="", origin="", arrival=""):
         self.id = id
@@ -8,14 +10,15 @@ class Aircraft:
         self.origin = origin
         self.arrival = arrival
 
-
+# Busca un aeropuerto dentro de una lista a partir de su código ICAO
 def FindAirport(airports, code):
     for ap in airports:
         if ap.icao == code:
             return ap
     return None
 
-
+# Carga los vuelos desde un fichero de texto (arrivals.txt)
+# Filtra líneas inválidas y crea objetos Aircraft
 def LoadArrivals(filename):
 
     aircrafts = []
@@ -30,12 +33,13 @@ def LoadArrivals(filename):
 
     for line in lines:
         line = line.strip()
-
+        # Ignora líneas vacías o cabeceras
         if not line or line.startswith("AIRCRAFT"):
             continue
 
         parts = line.split()
 
+        # Espera exactamente 4 campos
         if len(parts) != 4:
             continue
 
@@ -44,6 +48,7 @@ def LoadArrivals(filename):
         arrival = parts[2]
         airline = parts[3]
 
+        # Verifica que la hora tenga formato válido (hh:mm)
         if ":" not in arrival:
             continue
 
@@ -52,14 +57,14 @@ def LoadArrivals(filename):
 
     return aircrafts
 
-
+# Genera un gráfico de barras con el número de llegadas por hora
 def PlotArrivals(aircrafts):
 
     if not aircrafts:
         print("Error: empty list")
         return
 
-    hours = [0]*24
+    hours = [0]*24 # Contador para cada hora del día
 
     for i in range(len(aircrafts)):
         a = aircrafts[i]
@@ -76,7 +81,8 @@ def PlotArrivals(aircrafts):
     plt.title("Arrivals per hour")
     plt.show()
 
-
+# Guarda los vuelos en un fichero de salida
+# Sustituye valores vacíos por valores por defecto
 def SaveFlights(aircrafts, filename):
 
     if not aircrafts:
@@ -97,7 +103,7 @@ def SaveFlights(aircrafts, filename):
 
     file.close()
 
-
+# Genera un gráfico con el número de vuelos por aerolínea
 def PlotAirlines(aircrafts):
 
     if not aircrafts:
@@ -106,6 +112,7 @@ def PlotAirlines(aircrafts):
 
     counts = {}
 
+    # Cuenta vuelos por aerolínea
     for i in range(len(aircrafts)):
         a = aircrafts[i]
         counts[a.airline] = counts.get(a.airline, 0) + 1
@@ -120,7 +127,7 @@ def PlotAirlines(aircrafts):
     plt.tight_layout()
     plt.show()
 
-
+# Grafica vuelos Schengen vs No-Schengen (en barra apilada)
 def PlotFlightsType(aircrafts):
 
     if not aircrafts:
@@ -130,6 +137,7 @@ def PlotFlightsType(aircrafts):
     schengen = 0
     non_schengen = 0
 
+    # Clasifica vuelos según si el origen es Schengen
     for i in range(len(aircrafts)):
         a = aircrafts[i]
         if IsSchengenAirport(a.origin):
@@ -147,7 +155,8 @@ def PlotFlightsType(aircrafts):
     plt.legend()
     plt.show()
 
-
+# Genera un archivo KML para visualizar vuelos en Google Earth
+# Dibuja líneas desde el origen hasta Barcelona (LEBL)
 def MapFlights(aircrafts, airports):
 
     if not aircrafts or not airports:
@@ -177,6 +186,7 @@ def MapFlights(aircrafts, airports):
         lat1, lon1 = origin_ap.coordinates
         lat2, lon2 = dest.coordinates
 
+        # Color según si es Schengen o no
         if origin_ap.schengen:
             color = "ff0000ff"
         else:
@@ -205,7 +215,7 @@ def MapFlights(aircrafts, airports):
 
     print("File flights.kml created.")
 
-
+# Calcula la distancia entre dos puntos geográficos usando la fórmula de Haversine
 def Haversine(lat1, lon1, lat2, lon2):
 
     R = 6371
@@ -220,7 +230,7 @@ def Haversine(lat1, lon1, lat2, lon2):
 
     return R * c
 
-
+# Devuelve los vuelos cuya distancia al destino (LEBL) es mayor de 2000 km
 def LongDistanceArrivals(aircrafts, airports):
 
     if not aircrafts or not airports:
@@ -248,16 +258,19 @@ def LongDistanceArrivals(aircrafts, airports):
             dest.coordinates[1]
         )
 
+        # Filtra vuelos de larga distancia (>2000 km)
         if dist > 2000:
             result.append(a)
 
     return result
 
-
+# Programa principal
+# Ejecuta el flujo: carga datos, gráficos, guardado y análisis
 if __name__ == "__main__":
 
     airports = LoadAirports("airports.txt")
 
+    # Marca qué aeropuertos son Schengen
     for ap in airports:
         SetSchengen(ap)
 
@@ -265,13 +278,17 @@ if __name__ == "__main__":
 
     print("Flights loaded:", len(aircrafts))
 
+    # Visualizaciones
     PlotArrivals(aircrafts)
     PlotAirlines(aircrafts)
     PlotFlightsType(aircrafts)
 
+    # Guardado en fichero
     SaveFlights(aircrafts, "output_flights.txt")
 
+    # Mapa KML
     MapFlights(aircrafts, airports)
 
+    # Análisis de vuelos largos
     long_flights = LongDistanceArrivals(aircrafts, airports)
     print("Long distance flights:", len(long_flights))
