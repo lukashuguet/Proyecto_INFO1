@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 
-
 class Airport:
     # Clase que representa un aeropuerto con código, coordenadas y si es Schengen
     def __init__(self, icao, lat, lon):
@@ -8,7 +7,94 @@ class Airport:
         self.coordinates = (lat, lon)
         self.schengen = False
 
+class Gate:
+    def __init__(self, name):
+        self.name = name
+        self.occupied = False
+        self.aircraft_id = ""
 
+class BoardingArea:
+    def __init__(self, name, area_type):
+        self.name = name
+        self.type = area_type  # 'Schengen' o 'non-Schengen'
+        self.gates = []
+
+class Terminal:
+    def __init__(self, name):
+        self.name = name
+        self.boarding_areas = []
+        self.airlines = []
+
+class BarcelonaAP:
+    def __init__(self, code):
+        self.code = code
+        self.terminals = []
+
+
+def SetGates(area, init_gate, end_gate, prefix):
+    for i in range(init_gate, end_gate + 1):
+        nueva_gate = Gate(prefix + str(i))
+        area.gates.append(nueva_gate)
+
+
+def LoadAirlines(terminal, t_name):
+    f = open(t_name + "_Airlines.txt", "r")
+    lines = f.readlines()
+    f.close()
+    for i in range(len(lines)):
+        linea = lines[i].strip()
+        if linea:
+            partes = linea.split('\t')
+            if len(partes) > 1:
+                terminal.airlines.append(partes[1])
+
+
+def LoadAirportStructure(filename):
+    f = open(filename, "r")
+    lines = f.readlines()
+    f.close()
+
+    bcn = BarcelonaAP(lines[0].split()[0])
+    i = 1
+    while i < len(lines):
+        linea = lines[i].strip()
+        if linea.startswith("Terminal"):
+            partes = linea.split()
+            nueva_t = Terminal(partes[1])
+            LoadAirlines(nueva_t, partes[1])
+            num_areas = int(partes[2])
+            for j in range(1, num_areas + 1):
+                la = lines[i + j].strip().split()
+                area_obj = BoardingArea(la[1], la[2])
+                SetGates(area_obj, int(la[4]), int(la[5]), partes[1] + la[1])
+                nueva_t.boarding_areas.append(area_obj)
+            bcn.terminals.append(nueva_t)
+            i += num_areas + 1
+        else:
+            i += 1
+    return bcn
+
+
+def AssignGate(bcn, flight_airline, is_schengen):
+    # Buscamos en qué terminal está la aerolínea
+    t_dest = ""
+    for i in range(len(bcn.terminals)):
+        for j in range(len(bcn.terminals[i].airlines)):
+            if bcn.terminals[i].airlines[j] == flight_airline:
+                t_dest = bcn.terminals[i]
+
+    if t_dest == "": return "Terminal no encontrada"
+
+    # Buscamos puerta libre en zona correcta
+    tipo_buscado = "Schengen" if is_schengen else "non-Schengen"
+    for i in range(len(t_dest.boarding_areas)):
+        area = t_dest.boarding_areas[i]
+        if area.type == tipo_buscado:
+            for j in range(len(area.gates)):
+                if not area.gates[j].occupied:
+                    area.gates[j].occupied = True
+                    return area.gates[j].name
+    return "No hay puertas libres"
 # --------------------------------------------------
 # SCHENGEN
 # --------------------------------------------------
@@ -243,3 +329,4 @@ def FormatCoord(value, is_lat):
         return f"{direction}{degrees:02d}{minutes:02d}{seconds:02d}"
     else:
         return f"{direction}{degrees:03d}{minutes:02d}{seconds:02d}"
+

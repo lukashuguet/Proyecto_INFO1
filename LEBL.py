@@ -1,3 +1,4 @@
+# definimos las 4 clases necesarias para representar el aeropuerto.
 
 class Gate:
     def __init__(self, name):
@@ -22,6 +23,7 @@ class BarcelonaAP:
         self.code = code
         self.terminals = []
 
+# función que crea las puertas de una zona de embarque
 
 def SetGates(area, init_gate, end_gate, prefix):
     # Si el número final no es mayor que el inicial, error [cite: 134]
@@ -38,6 +40,7 @@ def SetGates(area, init_gate, end_gate, prefix):
 
     return 0
 
+#Lee qué aerolíneas van a cada terminal
 
 def LoadAirlines(terminal, t_name):
     # El nombre del fichero se construye según la terminal
@@ -60,6 +63,7 @@ def LoadAirlines(terminal, t_name):
     except:
         return -1  # Si el fichero no existe [cite: 137]
 
+# lee las terminales del archivo txt
 
 def LoadAirportStructure(filename):
     try:
@@ -110,6 +114,7 @@ def LoadAirportStructure(filename):
 
     return bcn
 
+# Para saber a qué terminal va un avión y darle una puerta libre
 
 def IsAirlineInTerminal(terminal, airline_code):
     if not airline_code:

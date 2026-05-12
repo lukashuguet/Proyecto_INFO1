@@ -95,3 +95,57 @@ etiqueta_estado = tk.Label(root, text="Estado: Esperando órdenes...", bd=1, rel
 etiqueta_estado.pack(side="bottom", fill="x")
 
 root.mainloop()
+
+from airport import *
+
+
+def Menu():
+    # 1. Variables de almacenamiento
+    lista_aeropuertos = []
+    lista_llegadas = []
+    mi_bcn = None
+
+    while True:
+        print("\n--- SISTEMA DE GESTIÓN AEROPUERTO LEBL ---")
+        print("1. Leer ficheros (Estructura y Aeropuertos)")
+        print("2. Imprimir vuelos y asignar puertas (Parte 3)")
+        print("0. Salir")
+
+        opcion = input("Selecciona una opción: ")
+
+        if opcion == "1":
+            # Cargamos la estructura del aeropuerto (Parte 3)
+            mi_bcn = LoadAirportStructure("Terminals.txt")
+            # Cargamos la base de datos de aeropuertos del mundo (Parte 1)
+            lista_aeropuertos = LoadAirports("Airports.txt")
+            # Cargamos los vuelos que llegan (Parte 2)
+            # Nota: Aquí deberías tener tu función LoadFlights o similar
+            # Para el ejemplo, supongamos que ya tienes vuelos cargados
+            print("Archivos cargados correctamente.")
+
+        elif opcion == "2":
+            if mi_bcn is None:
+                print("Error: Primero debes cargar la estructura (Opción 1)")
+            else:
+                # Simulamos que tenemos una lista de vuelos cargada para probar
+                # En tu código real, usa la lista que cargues del archivo Arrivals.txt
+                print("\nASIGNACIÓN DE PUERTAS EN TIEMPO REAL:")
+
+                # USAMOS FOR IN RANGE COMO PEDISTE
+                for i in range(len(lista_llegadas)):
+                    vuelo = lista_llegadas[i]
+
+                    # A) Miramos si el origen es Schengen
+                    es_schengen = IsSchengenAirport(vuelo.origin)
+
+                    # B) ASIGNAMOS LA PUERTA (Aquí se conecta la lógica de la Parte 3)
+                    puerta = AssignGate(mi_bcn, vuelo.airline, es_schengen)
+
+                    print(f"Vuelo: {vuelo.id} | Aerolínea: {vuelo.airline} | Puerta: {puerta}")
+
+        elif opcion == "0":
+            break
+
+
+if __name__ == "__main__":
+    Menu()
