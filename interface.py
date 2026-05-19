@@ -44,8 +44,46 @@ def ejecutar_validar():
     messagebox.showinfo("Éxito", "Validación Schengen completada.")
 
 
+import matplotlib.pyplot as plt
+
 def ejecutar_grafico():
+    global lista_vuelos, lista_aeropuertos
+    if not lista_vuelos or not lista_aeropuertos:
+        messagebox.showwarning("Atención", "Primero debes cargar los Airports.txt y los Arrivals.txt")
+        return
+
+    # 1. Ejecutamos el gráfico original de llegadas por hora por si quieres mantenerlo
     PlotArrivals(lista_vuelos)
+
+    # 2. Contamos cuántos vuelos son Schengen y cuántos No-Schengen
+    schengen_count = 0
+    non_schengen_count = 0
+
+    for vuelo in lista_vuelos:
+        # Buscamos el aeropuerto de origen del vuelo
+        aeropuerto_origen = FindAirport(lista_aeropuertos, vuelo.origin)
+        if aeropuerto_origen:
+            if getattr(aeropuerto_origen, 'schengen', False):
+                schengen_count += 1
+            else:
+                non_schengen_count += 1
+        else:
+            # Si no se encuentra en la lista, por defecto lo tratamos como No-Schengen internacional
+            non_schengen_count += 1
+
+    # 3. Dibujamos el gráfico circular (Pie Chart)
+    labels = ['Schengen', 'Non-Schengen']
+    valores = [schengen_count, non_schengen_count]
+    colores = ['#4caf50', '#f44336']  # Verde para Schengen, Rojo para No-Schengen
+    explode = (0.05, 0)  # Separamos un poco el trozo de Schengen para que quede profesional
+
+    plt.figure("Proporción de Vuelos - LEBL")
+    plt.pie(valores, explode=explode, labels=labels, colors=colores,
+            autopct='%1.1f%%', shadow=True, startangle=140,
+            textprops={'fontsize': 12, 'weight': 'bold'})
+    plt.title("Distribución de Vuelos: Schengen vs Non-Schengen", fontsize=14, weight='bold', pad=20)
+    plt.axis('equal')
+    plt.show()
 
 
 def ejecutar_mapa():
