@@ -138,7 +138,7 @@ def Menu():
                     # A) Miramos si el origen es Schengen
                     es_schengen = IsSchengenAirport(vuelo.origin)
 
-                    # B) ASIGNAMOS LA PUERTA (Aquí se conecta la lógica de la Parte 3)
+                    # B) ASIGNAMOS LA PUERTA
                     puerta = AssignGate(mi_bcn, vuelo.airline, es_schengen)
 
                     print(f"Vuelo: {vuelo.id} | Aerolínea: {vuelo.airline} | Puerta: {puerta}")
