@@ -1,151 +1,197 @@
 from airport import *
+from aircraft import *
+import LEBL
 import os
+import subprocess
 import tkinter as tk
+from tkinter import messagebox
 
-# --- VARIABLES GLOBALES ---
 lista_aeropuertos = []
+lista_vuelos = []
+objeto_lebl = None
 
-# --- FUNCIONES DE LOS BOTONES (Lógica básica) ---
+
 def ejecutar_cargar():
     global lista_aeropuertos
     lista_aeropuertos = LoadAirports("Airports.txt")
-    etiqueta_estado.config(text="INFO: " + str(len(lista_aeropuertos)) + " aeropuertos en memoria.", fg="blue")
+    messagebox.showinfo("Éxito", "Airports.txt cargado correctamente.")
+
 
 def ejecutar_anyadir():
-    c = entrada_code.get().upper() # .upper() asegura que sea mayúsculas
+    c = entrada_code.get().upper()
     try:
         la = float(entrada_lat.get())
         lo = float(entrada_lon.get())
         nuevo = Airport(c, la, lo)
         AddAirport(lista_aeropuertos, nuevo)
-        etiqueta_estado.config(text="OK: " + c + " añadido correctamente.", fg="green")
+        messagebox.showinfo("Éxito", f"Aeropuerto {c} añadido.")
     except:
-        etiqueta_estado.config(text="ERROR: Datos numéricos incorrectos.", fg="red")
+        messagebox.showerror("Error", "Datos numéricos incorrectos.")
+
 
 def ejecutar_borrar():
     c = entrada_code.get().upper()
     RemoveAirport(lista_aeropuertos, c)
-    etiqueta_estado.config(text="AVISO: Intento de borrado de " + c, fg="orange")
+    messagebox.showinfo("Éxito", f"Aeropuerto {c} eliminado.")
+
 
 def ejecutar_validar():
+    global lista_aeropuertos
     i = 0
     while i < len(lista_aeropuertos):
         SetSchengen(lista_aeropuertos[i])
         i = i + 1
-    etiqueta_estado.config(text="OK: Datos Schengen actualizados.", fg="purple")
+    messagebox.showinfo("Éxito", "Validación Schengen completada.")
+
 
 def ejecutar_grafico():
-    PlotAirports(lista_aeropuertos)
+    PlotArrivals(lista_vuelos)
+
 
 def ejecutar_mapa():
     MapAirports(lista_aeropuertos)
-    if os.path.exists("AirportsMap.kml"):
-        os.startfile("AirportsMap.kml")
-        etiqueta_estado.config(text="OK: Abriendo Google Earth...", fg="green")
+    if os.path.exists("airports.kml"):
+        try:
+            if hasattr(os, 'startfile'):
+                os.startfile("airports.kml")
+            else:
+                subprocess.call(["open", "-e", "airports.kml"])
+        except:
+            messagebox.showerror("Error", "No se pudo abrir automáticamente el KML.")
     else:
-        etiqueta_estado.config(text="ERROR: No se pudo abrir el mapa.", fg="red")
+        messagebox.showerror("Error", "No se encontró airports.kml")
+
 
 def ejecutar_guardar():
     SaveSchengenAirports(lista_aeropuertos, "Schengen_Solo.txt")
+    messagebox.showinfo("Éxito", "Archivo Schengen_Solo.txt guardado.")
 
-# --- CONSTRUCCIÓN DE LA INTERFAZ ---
+
+def ejecutar_cargar_lebl():
+    global objeto_lebl
+    objeto_lebl = LEBL.LoadAirportStructure("Terminals.txt")
+    if objeto_lebl == -1 or not objeto_lebl or len(objeto_lebl.terminals) == 0:
+        messagebox.showerror("Error", "No se pudo cargar Terminals.txt o está vacío.")
+    else:
+        actualizar_pantalla_ocupacion()
+
+
+def ejecutar_cargar_vuelos():
+    global lista_vuelos
+    lista_vuelos = LoadArrivals("Arrivals.txt")
+    messagebox.showinfo("Éxito", "Arrivals.txt cargado correctamente.")
+
+
+def ejecutar_asignar_puertas():
+    global objeto_lebl, lista_aeropuertos, lista_vuelos
+    if not objeto_lebl or not lista_vuelos or not lista_aeropuertos:
+        messagebox.showwarning("Atención", "Faltan datos por cargar (Airports, Terminals o Arrivals).")
+        return
+
+    ejecutar_validar()
+    for i in range(len(lista_vuelos)):
+        vuelo = lista_vuelos[i]
+        aeropuerto_origen = FindAirport(lista_aeropuertos, vuelo.origin)
+        es_schengen = aeropuerto_origen.schengen if aeropuerto_origen else False
+        LEBL.AssignGate(objeto_lebl, vuelo, es_schengen)
+
+    actualizar_pantalla_ocupacion()
+    messagebox.showinfo("Éxito", "Puertas asignadas correctamente.")
+
+
+def actualizar_pantalla_ocupacion():
+    global objeto_lebl
+    if not objeto_lebl: return
+    txt_visualizador.delete("1.0", tk.END)
+    datos_ocupacion = LEBL.GateOccupancy(objeto_lebl)
+
+    resumen_texto = "=== MONITOR DE PUERTAS LEBL ===\n\n"
+    if not datos_ocupacion:
+        resumen_texto += "No se encontraron puertas cargadas en la estructura.\n"
+    else:
+        for i in range(len(datos_ocupacion)):
+            p = datos_ocupacion[i]
+            estado = "[OCUPADA]" if p['occupied'] else "[LIBRE]"
+            avion = f"-> Avión: {p['aircraft']}" if p['occupied'] else ""
+            resumen_texto += f"Puerta: {p['gate']:5} | {p['terminal']} | {estado:9} {avion}\n"
+
+    txt_visualizador.insert(tk.END, resumen_texto)
+
+
+# INTERFAZ GRÁFICA MAC-FRIENDLY
 root = tk.Tk()
-root.title("Airport Management Tool - UPC")
-root.geometry("450x600")
-root.configure(bg="#f0f0f0") # Color de fondo gris claro
+root.title("Airport Tool - University Management System")
+root.geometry("1100x650")
+root.configure(bg="#f8f9fa")
 
-# 1. TÍTULO PRINCIPAL
-tk.Label(root, text="GESTIÓN DE AEROPUERTOS", font=("Arial", 16, "bold"), bg="#f0f0f0").pack(pady=10)
+frame_izquierdo = tk.Frame(root, bg="#f8f9fa")
+frame_izquierdo.pack(side="left", padx=20, pady=10, fill="y")
 
-# 2. BLOQUE DE DATOS (LabelFrame: una caja con título)
-marco_datos = tk.LabelFrame(root, text=" Datos del Aeropuerto ", padx=10, pady=10)
-marco_datos.pack(padx=20, pady=10, fill="x")
+frame_derecho = tk.Frame(root, bg="#f8f9fa")
+frame_derecho.pack(side="right", padx=20, pady=10, fill="both", expand=True)
 
-tk.Label(marco_datos, text="Código ICAO:").grid(row=0, column=0, sticky="w")
-entrada_code = tk.Entry(marco_datos)
-entrada_code.grid(row=0, column=1, pady=2)
+tk.Label(frame_izquierdo, text="PANEL DE CONFIGURACIÓN", font=("Arial", 13, "bold"), bg="#f8f9fa", fg="#212529").pack(
+    pady=10)
 
-tk.Label(marco_datos, text="Latitud (Decimal):").grid(row=1, column=0, sticky="w")
-entrada_lat = tk.Entry(marco_datos)
-entrada_lat.grid(row=1, column=1, pady=2)
+# BLOQUE 1
+marco_datos = tk.LabelFrame(frame_izquierdo, text=" 1. Añadir Aeropuerto Manual ", font=("Arial", 10, "bold"),
+                            bg="#f8f9fa", fg="#212529", padx=10, pady=5)
+marco_datos.pack(pady=8, fill="x")
 
-tk.Label(marco_datos, text="Longitud (Decimal):").grid(row=2, column=0, sticky="w")
-entrada_lon = tk.Entry(marco_datos)
-entrada_lon.grid(row=2, column=1, pady=2)
+tk.Label(marco_datos, text="ICAO:", font=("Arial", 9, "bold"), bg="#f8f9fa").grid(row=0, column=0, padx=4)
+entrada_code = tk.Entry(marco_datos, width=7, font=("Arial", 10))
+entrada_code.grid(row=0, column=1, padx=4, pady=10)
 
-# 3. BLOQUE DE GESTIÓN (Añadir/Borrar/Cargar)
-marco_gestion = tk.LabelFrame(root, text=" Operaciones de Gestión ", padx=10, pady=10)
-marco_gestion.pack(padx=20, pady=10, fill="x")
+tk.Label(marco_datos, text="Lat:", font=("Arial", 9, "bold"), bg="#f8f9fa").grid(row=0, column=2, padx=4)
+entrada_lat = tk.Entry(marco_datos, width=9, font=("Arial", 10))
+entrada_lat.grid(row=0, column=3, padx=4)
 
-tk.Button(marco_gestion, text="Cargar Airports.txt", width=20, command=ejecutar_cargar).grid(row=0, column=0, padx=5, pady=2)
-tk.Button(marco_gestion, text="Añadir a la lista", width=20, bg="#d4edda", command=ejecutar_anyadir).grid(row=0, column=1, padx=5, pady=2)
-tk.Button(marco_gestion, text="Borrar por Código", width=20, bg="#f8d7da", command=ejecutar_borrar).grid(row=1, column=0, padx=5, pady=2)
-tk.Button(marco_gestion, text="Validar Schengen", width=20, command=ejecutar_validar).grid(row=1, column=1, padx=5, pady=2)
+tk.Label(marco_datos, text="Lon:", font=("Arial", 9, "bold"), bg="#f8f9fa").grid(row=0, column=4, padx=4)
+entrada_lon = tk.Entry(marco_datos, width=9, font=("Arial", 10))
+entrada_lon.grid(row=0, column=5, padx=4)
 
-# 4. BLOQUE DE VISUALIZACIÓN (Gráficos/Mapas)
-marco_visual = tk.LabelFrame(root, text=" Visualización y Salida ", padx=10, pady=10)
-marco_visual.pack(padx=20, pady=10, fill="x")
+# BLOQUE 2
+marco_gestion = tk.LabelFrame(frame_izquierdo, text=" 2. Base de Datos Mundial ", font=("Arial", 10, "bold"),
+                              bg="#f8f9fa", fg="#212529", padx=10, pady=10)
+marco_gestion.pack(pady=8, fill="x")
 
-tk.Button(marco_visual, text="Ver Gráfico de Barras", width=20, command=ejecutar_grafico).grid(row=0, column=0, padx=5, pady=2)
-tk.Button(marco_visual, text="Generar Mapa Google Earth", width=20, command=ejecutar_mapa).grid(row=0, column=1, padx=5, pady=2)
-tk.Button(marco_visual, text="Guardar solo Schengen", width=43, bg="#cce5ff", command=ejecutar_guardar).grid(row=1, column=0, columnspan=2, pady=5)
+tk.Button(marco_gestion, text="Cargar Airports.txt", width=18, pady=8, bg="#e2e6ea", highlightbackground="#e2e6ea",
+          fg="black", font=("Arial", 9, "bold"), command=ejecutar_cargar).grid(row=0, column=0, padx=6, pady=6)
+tk.Button(marco_gestion, text="Añadir Manual", width=18, pady=8, bg="#d4edda", highlightbackground="#d4edda",
+          fg="black", font=("Arial", 9, "bold"), command=ejecutar_anyadir).grid(row=0, column=1, padx=6, pady=6)
+tk.Button(marco_gestion, text="Borrar por ICAO", width=18, pady=8, bg="#f8d7da", highlightbackground="#f8d7da",
+          fg="black", font=("Arial", 9, "bold"), command=ejecutar_borrar).grid(row=1, column=0, padx=6, pady=6)
+tk.Button(marco_gestion, text="Validar Schengen", width=18, pady=8, bg="#e2e6ea", highlightbackground="#e2e6ea",
+          fg="black", font=("Arial", 9, "bold"), command=ejecutar_validar).grid(row=1, column=1, padx=6, pady=6)
+tk.Button(marco_gestion, text="Ver Gráfico", width=18, pady=8, bg="#e8f4fd", highlightbackground="#e8f4fd", fg="black",
+          font=("Arial", 9, "bold"), command=ejecutar_grafico).grid(row=2, column=0, padx=6, pady=6)
+tk.Button(marco_gestion, text="Mapa Google Earth", width=18, pady=8, bg="#e8f4fd", highlightbackground="#e8f4fd",
+          fg="black", font=("Arial", 9, "bold"), command=ejecutar_mapa).grid(row=2, column=1, padx=6, pady=6)
+tk.Button(marco_gestion, text="Guardar solo Schengen", width=39, pady=8, bg="#cce5ff", highlightbackground="#cce5ff",
+          fg="black", font=("Arial", 10, "bold"), command=ejecutar_guardar).grid(row=3, column=0, columnspan=2, pady=8)
 
-# 5. BARRA DE ESTADO
-etiqueta_estado = tk.Label(root, text="Estado: Esperando órdenes...", bd=1, relief="sunken", anchor="w", font=("Arial", 9, "italic"))
-etiqueta_estado.pack(side="bottom", fill="x")
+# BLOQUE 3
+marco_lebl = tk.LabelFrame(frame_izquierdo, text=" 3. Operaciones LEBL ", font=("Arial", 10, "bold"), bg="#f8f9fa",
+                           fg="#212529", padx=10, pady=10)
+marco_lebl.pack(pady=12, fill="x")
+
+tk.Button(marco_lebl, text="1. Cargar Estructura\n(Terminals.txt)", width=18, pady=8, bg="#fff3cd",
+          highlightbackground="#fff3cd", fg="black", font=("Arial", 9, "bold"), command=ejecutar_cargar_lebl).grid(
+    row=0, column=0, padx=6, pady=6)
+tk.Button(marco_lebl, text="2. Cargar Tráfico\n(Arrivals.txt)", width=18, pady=8, bg="#fff3cd",
+          highlightbackground="#fff3cd", fg="black", font=("Arial", 9, "bold"), command=ejecutar_cargar_vuelos).grid(
+    row=0, column=1, padx=6, pady=6)
+tk.Button(marco_lebl, text="3. Asignar Asignación Estática", width=39, pady=12, bg="#17a2b8",
+          highlightbackground="#17a2b8", fg="black", font=("Arial", 10, "bold"), command=ejecutar_asignar_puertas).grid(
+    row=1, column=0, columnspan=2, pady=12)
+
+# MONITOR DERECHO
+tk.Label(frame_derecho, text="MONITOR DE PUERTAS EN TIEMPO REAL", font=("Arial", 12, "bold"), bg="#f8f9fa",
+         fg="#212529").pack(pady=10)
+
+# El cuadro se crea limpio y configurado en letras negras
+txt_visualizador = tk.Text(frame_derecho, width=65, height=32, wrap="none", font=("Courier", 11, "bold"),
+                           bg="#ffffff", fg="#000000", bd=2, relief="sunken")
+txt_visualizador.pack(fill="both", expand=True, pady=5)
 
 root.mainloop()
-
-from airport import *
-
-
-def Menu():
-    # 1. Variables de almacenamiento
-    lista_aeropuertos = []
-    lista_llegadas = []
-    mi_bcn = None
-
-    while True:
-        print("\n--- SISTEMA DE GESTIÓN AEROPUERTO LEBL ---")
-        print("1. Leer ficheros (Estructura y Aeropuertos)")
-        print("2. Imprimir vuelos y asignar puertas (Parte 3)")
-        print("0. Salir")
-
-        opcion = input("Selecciona una opción: ")
-
-        if opcion == "1":
-            # Cargamos la estructura del aeropuerto (Parte 3)
-            mi_bcn = LoadAirportStructure("Terminals.txt")
-            # Cargamos la base de datos de aeropuertos del mundo (Parte 1)
-            lista_aeropuertos = LoadAirports("Airports.txt")
-            # Cargamos los vuelos que llegan (Parte 2)
-            # Nota: Aquí deberías tener tu función LoadFlights o similar
-            # Para el ejemplo, supongamos que ya tienes vuelos cargados
-            print("Archivos cargados correctamente.")
-
-        elif opcion == "2":
-            if mi_bcn is None:
-                print("Error: Primero debes cargar la estructura (Opción 1)")
-            else:
-                # Simulamos que tenemos una lista de vuelos cargada para probar
-                # En tu código real, usa la lista que cargues del archivo Arrivals.txt
-                print("\nASIGNACIÓN DE PUERTAS EN TIEMPO REAL:")
-
-                # USAMOS FOR IN RANGE COMO PEDISTE
-                for i in range(len(lista_llegadas)):
-                    vuelo = lista_llegadas[i]
-
-                    # A) Miramos si el origen es Schengen
-                    es_schengen = IsSchengenAirport(vuelo.origin)
-
-                    # B) ASIGNAMOS LA PUERTA
-                    puerta = AssignGate(mi_bcn, vuelo.airline, es_schengen)
-
-                    print(f"Vuelo: {vuelo.id} | Aerolínea: {vuelo.airline} | Puerta: {puerta}")
-
-        elif opcion == "0":
-            break
-
-
-if __name__ == "__main__":
-    Menu()
