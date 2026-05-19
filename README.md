@@ -13,3 +13,10 @@ También se generan gráficos de barras comparativos para analizar la distribuci
 La segunda versión amplía su alcance a la gestión de vuelos con destino a Barcelona (LEBL). Mediante la nueva clase Aircraft, el sistema procesa datos críticos como el identificador de vuelo, la aerolínea y la hora de llegada, incluyendo un motor de validación que descarta automáticamente registros erróneos o incompletos.
 
 Esta actualización destaca por su capacidad analítica y visual, permitiendo generar gráficos de frecuencias horarias, estadísticas por aerolínea y comparativas de vuelos Schengen. Además, se incorpora el cálculo de distancias mediante la fórmula de Haversine para identificar vuelos de largo radio (+2000 km). Finalmente, la herramienta permite mapear en Google Earth las trayectorias completas desde el origen, todo integrado en una interfaz gráfica que centraliza la carga, el análisis y la exportación de operaciones aéreas.
+
+# Versión 3
+
+La tercera versión escala la complejidad del proyecto al centrarse en la arquitectura interna y la gestión operativa de las puertas de embarque (gates) del aeropuerto de Barcelona-El Prat (LEBL). El sistema se estructura mediante un modelo jerárquico de clases (aeropuerto, terminales, áreas de embarque y puertas) que almacena la distribución de las aerolíneas y el estado de ocupación en tiempo real.
+Esta actualización introduce la carga dinámica de la infraestructura desde archivos externos (LEBL.txt y listados de aerolíneas) e incorpora la asignación estática de puertas. 
+
+Este motor vincula los vuelos entrantes con la puerta disponible más adecuada, evaluando restricciones críticas como la terminal asignada a la aerolínea y el tipo de vuelo (Schengen o no-Schengen). Finalmente, se potencia la interfaz en Tkinter para permitir al usuario inicializar el aeropuerto, gestionar los flujos de aeronaves y monitorizar visualmente el estado de ocupación de forma centralizada.
