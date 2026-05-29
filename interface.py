@@ -402,7 +402,9 @@ tk.Button(marco_lebl, text="4. Posicionar Aviones Nocturnos", width=38, pady=6, 
                                                                                                                   columnspan=2,
                                                                                                                   pady=4)
 
-# SECTION 4: Control Deslizable y Simulación Temporal Interactiva
+# =============================================================================
+# SECTION 4: CONTROL DESLIZABLE Y SIMULACIÓN TEMPORAL INTERACTIVA
+# =============================================================================
 marco_simulacion = tk.LabelFrame(frame_izquierdo, text=" 4. Línea de Tiempo / Análisis Activo ",
                                  font=("Arial", 10, "bold"), bg=COLOR_BG, fg="#000000", padx=5, pady=5)
 marco_simulacion.pack(pady=5, fill="x")
@@ -412,18 +414,19 @@ label_status_hora = tk.Label(marco_simulacion, text="Hora Activa: 00:00 | Listo 
 label_status_hora.pack(pady=2)
 
 # Slider configurado para actualizarse únicamente al soltar el ratón
-slider_tiempo = tk.Scale(marco_simulacion, from_=0, to=23, orient="horizontal", tickinterval=4, font=("Arial", 8),
-                         bg=COLOR_BG)
+slider_tiempo = tk.Scale(marco_simulacion, from_=0, to=23, orient="horizontal",
+                         tickinterval=4, font=("Arial", 8), bg=COLOR_BG)
 slider_tiempo.pack(fill="x", padx=5, pady=5)
 
 # Evento exclusivo para que la simulación no cause micro-tirones durante el arrastre
 slider_tiempo.bind("<ButtonRelease-1>", lambda event: ejecutar_simular_hora())
 
+# Botón inferior para la gráfica de líneas de ocupación diaria (PlotDayOccupancy)
 tk.Button(marco_simulacion, text="Graficar Ocupación de Todo el Día", width=38, pady=8, bg=COLOR_ASIGNAR,
           highlightbackground=COLOR_ASIGNAR, font=("Arial", 9, "bold"), fg="black",
           command=ejecutar_plot_ocupacion_completa).pack(pady=6)
 
 # =============================================================================
-# ACTIVACIÓN DE LA APLICACIÓN
+# ACTIVACIÓN DE LA APLICACIÓN (FIN DEL ARCHIVO)
 # =============================================================================
 root.mainloop()
