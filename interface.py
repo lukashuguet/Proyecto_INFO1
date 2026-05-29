@@ -249,6 +249,32 @@ def ejecutar_unificar_movimientos():
     messagebox.showinfo("Éxito", f"Fusión completada. {len(lista_movimientos_merged)} aeronaves consolidadas.")
 
 
+def ejecutar_mapa_vuelos():
+    """Genera el mapa de rutas KML de forma compatible y controlando si no hay Google Earth"""
+    global lista_movimientos_merged, lista_aeropuertos
+    if not lista_movimientos_merged or not lista_aeropuertos:
+        messagebox.showwarning("Atención", "Se requieren los Aeropuertos cargados y los Movimientos fusionados.")
+        return
+
+    # Genera el archivo real en tu carpeta de Pycharm
+    MapFlights(lista_movimientos_merged, lista_aeropuertos)
+
+    if os.path.exists("flights.kml"):
+        try:
+            if hasattr(os, 'startfile'):
+                os.startfile("flights.kml")
+            else:
+                # Usamos stderr para capturar si Mac dice que no encuentra la app
+                with open(os.devnull, 'w') as devnull:
+                    subprocess.call(["open", "flights.kml"], stderr=devnull, stdout=devnull)
+        except Exception:
+            # Si da cualquier tipo de error de apertura, el programa avisa amigablemente
+            messagebox.showinfo("Mapa Guardado",
+                                "El archivo 'flights.kml' se ha generado con éxito en tu carpeta del proyecto.\n\nInstala Google Earth para que se abra automáticamente de forma interactiva.")
+    else:
+        messagebox.showerror("Error", "No se encontró el fichero 'flights.kml'.")
+
+
 def ejecutar_preparar_noche():
     """Detecta y posiciona los aviones nocturnos (NightAircraft) en sus puertas de origen."""
     global objeto_lebl, lista_movimientos_merged
@@ -363,9 +389,12 @@ tk.Button(marco_lebl, text="2b. Cargar Departures.txt", width=18, pady=6, bg=COL
                                                                                                                   padx=4,
                                                                                                                   pady=3)
 
-tk.Button(marco_lebl, text="3. Fusionar Movimientos (Merge)", width=38, pady=6, bg=COLOR_BTN_PRIMARY,
-          highlightbackground=COLOR_BTN_PRIMARY, font=("Arial", 9, "bold"), command=ejecutar_unificar_movimientos).grid(
-    row=2, column=0, columnspan=2, pady=4)
+# Ponemos el Merge a la izquierda y el nuevo Mapa de Rutas a la derecha
+tk.Button(marco_lebl, text="3. Fusionar (Merge)", width=18, pady=6, bg=COLOR_BTN_PRIMARY,
+          highlightbackground=COLOR_BTN_PRIMARY, font=("Arial", 9, "bold"), command=ejecutar_unificar_movimientos).grid(row=2, column=0, padx=4, pady=4)
+
+tk.Button(marco_lebl, text="Mapa Rutas Vuelo", width=18, pady=6, bg=COLOR_BTN_PRIMARY,
+          highlightbackground=COLOR_BTN_PRIMARY, font=("Arial", 9, "bold"), command=ejecutar_mapa_vuelos).grid(row=2, column=1, padx=4, pady=4)
 
 tk.Button(marco_lebl, text="4. Posicionar Aviones Nocturnos", width=38, pady=6, bg=COLOR_BTN_SUCCESS,
           highlightbackground=COLOR_BTN_SUCCESS, font=("Arial", 9, "bold"), command=ejecutar_preparar_noche).grid(row=3,
