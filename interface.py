@@ -60,6 +60,7 @@ scrollbar_v.pack(side="right", fill="y")
 
 canvas_visualizador.config(yscrollcommand=scrollbar_v.set)
 
+
 # =============================================================================
 # MOTOR DE DIBUJO ESQUEMÁTICO EN ÁRBOL COLUMNAS PARALELAS (T1 / T2)
 # =============================================================================
@@ -122,6 +123,7 @@ def ActualizarDiagramaVisual(bcn):
 
     canvas_visualizador.config(scrollregion=(0, 0, 1100, y_maxima_alcanzada + 50))
 
+
 # =============================================================================
 # FUNCIONES CONTROLADORAS (BLOQUE 2: BASE DE DATOS MUNDIAL)
 # =============================================================================
@@ -163,14 +165,27 @@ def ejecutar_validar():
     messagebox.showinfo("Éxito", "Validación Schengen completada.")
 
 
-def ejecutar_grafico():
-    """Muestra la estadística horaria clásica de arribos."""
-    global lista_llegadas
-    if not lista_llegadas:
-        messagebox.showwarning("Atención", "Primero debes cargar el archivo Arrivals.txt.")
+def ejecutar_analisis_completo():
+    """Botón Sección 2: Lanza los 3 gráficos operacionales basados en tus capturas"""
+    global lista_movimientos_merged
+    if not lista_movimientos_merged:
+        messagebox.showwarning("Atención", "Debes cargar los movimientos y realizar la fusión (Merge) primero.")
         return
-    PlotArrivals(lista_llegadas)
 
+    PlotArrivalsPerHour(lista_movimientos_merged)
+    PlotFlightsPerAirline(lista_movimientos_merged)
+    PlotSchengenProportion(lista_movimientos_merged)
+
+
+def ejecutar_plot_ocupacion_completa():
+    """Botón Sección 4: Lanza el gráfico de líneas de ocupación T1/T2 reconstruyendo las 24 horas"""
+    global objeto_lebl, lista_movimientos_merged
+    if not objeto_lebl or not lista_movimientos_merged:
+        messagebox.showwarning("Atención", "Estructura y movimientos unificados obligatorios.")
+        return
+
+    # Llamamos a tu gráfica necesaria pasando los objetos de la interfaz
+    PlotDayOccupancy(objeto_lebl, lista_movimientos_merged)
 
 def ejecutar_mapa():
     """Genera el mapa de marcas geográficas KML e intenta abrirlo en el sistema."""
@@ -211,7 +226,7 @@ def ejecutar_cargar_vuelos():
     """Carga de forma separada las llegadas (Arrivals.txt)."""
     global lista_llegadas
     lista_llegadas = LoadArrivals("Arrivals.txt")
-    messagebox.showinfo("Éxito", "Arrivals.txt cargado correctamente in memoria.")
+    messagebox.showinfo("Éxito", "Arrivals.txt cargado correctamente en memoria.")
 
 
 def ejecutar_cargar_salidas():
@@ -264,15 +279,6 @@ def ejecutar_simular_hora():
     label_status_hora.config(text=f"Hora Activa: {string_hora} | No asignados en este tramo: {no_asignados}")
 
 
-def ejecutar_plot_ocupacion_completa():
-    """Genera el diagrama de barras y evolución temporal de ocupación del día."""
-    global objeto_lebl, lista_movimientos_merged
-    if not objeto_lebl or not lista_movimientos_merged:
-        messagebox.showwarning("Atención", "Estructura y movimientos unificados obligatorios.")
-        return
-    PlotDayOccupancy(objeto_lebl, lista_movimientos_merged)
-
-
 # =============================================================================
 # CONSTRUCCIÓN DE LA ARQUITECTURA DE LA VENTANA (BOTONES Y MARCOS)
 # =============================================================================
@@ -319,11 +325,13 @@ tk.Button(marco_gestion, text="Validar Schengen", width=18, pady=6, bg=COLOR_BTN
                                                                                                            column=1,
                                                                                                            padx=4,
                                                                                                            pady=4)
-tk.Button(marco_gestion, text="Ver Gráfico Arribos", width=18, pady=6, bg=COLOR_BTN_PRIMARY,
-          highlightbackground=COLOR_BTN_PRIMARY, font=("Arial", 9, "bold"), command=ejecutar_grafico).grid(row=2,
-                                                                                                           column=0,
-                                                                                                           padx=4,
-                                                                                                           pady=4)
+
+# El botón de estadísticas ahora está perfectamente integrado en la cuadrícula del bloque 2
+tk.Button(marco_gestion, text="Ver Análisis de Estadísticas", width=18, pady=6, bg=COLOR_BTN_PRIMARY,
+          highlightbackground=COLOR_BTN_PRIMARY, font=("Arial", 9, "bold"), command=ejecutar_analisis_completo).grid(
+    row=2, column=0,
+    padx=4, pady=4)
+
 tk.Button(marco_gestion, text="Mapa Google Earth", width=18, pady=6, bg=COLOR_BTN_PRIMARY,
           highlightbackground=COLOR_BTN_PRIMARY, font=("Arial", 9, "bold"), command=ejecutar_mapa).grid(row=2, column=1,
                                                                                                         padx=4, pady=4)
@@ -334,7 +342,7 @@ tk.Button(marco_gestion, text="Guardar solo Schengen", width=38, pady=6, bg=COLO
                                                                                                            columnspan=2,
                                                                                                            pady=6)
 
-# SECTION 3: Núcleo de Operaciones Dinámicas LEBL (SIN EL TEXTO V4)
+# SECTION 3: Núcleo de Operaciones Dinámicas LEBL
 marco_lebl = tk.LabelFrame(frame_izquierdo, text=" 3. Procesamiento Dinámico LEBL ", font=("Arial", 10, "bold"),
                            bg=COLOR_BG, fg="#000000", padx=5, pady=5)
 marco_lebl.pack(pady=5, fill="x")
@@ -375,7 +383,8 @@ label_status_hora = tk.Label(marco_simulacion, text="Hora Activa: 00:00 | Listo 
 label_status_hora.pack(pady=2)
 
 # Slider configurado para actualizarse únicamente al soltar el ratón
-slider_tiempo = tk.Scale(marco_simulacion, from_=0, to=23, orient="horizontal", tickinterval=4, font=("Arial", 8), bg=COLOR_BG)
+slider_tiempo = tk.Scale(marco_simulacion, from_=0, to=23, orient="horizontal", tickinterval=4, font=("Arial", 8),
+                         bg=COLOR_BG)
 slider_tiempo.pack(fill="x", padx=5, pady=5)
 
 # Evento exclusivo para que la simulación no cause micro-tirones durante el arrastre
