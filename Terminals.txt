@@ -8,7 +8,13 @@ Area E non-Schengen Gates 1 - 11
 Terminal T2     6 boarding areas
 Area M Schengen     Gates 1 - 8
 Area R Schengen     Gates 9 - 19
-Area S Schengen     Gates 20 - 30
+Area S Schengen     Gates 20 - 29
 Area U Schengen     Gates 30 - 39
 Area W non-Schengen Gates 40 - 49
 Area Y non-Schengen Gates 50 - 59
+Terminal T3     5 boarding areas
+Area F Schengen     Gates 1 - 8
+Area G Schengen     Gates 9 - 19
+Area H Schengen     Gates 20 - 30
+Area I non-Schengen Gates 30 - 39
+Area J non-Schengen Gates 40 - 49

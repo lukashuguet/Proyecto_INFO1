@@ -337,6 +337,32 @@ def ActualizarDiagramaVisual(bcn):
 # =============================================================================
 # FUNCIONES CONTROLADORAS (Acciones de los botones)
 # =============================================================================
+def ObtenerEstadoSchengen(codigo_buscado):
+    global lista_aeropuertos
+    # Asegúrate de que la lista no esté vacía antes de recorrerla
+    if lista_aeropuertos == None:
+        return False
+
+    i = 0
+    encontrado = False
+    estado = False
+
+    # Recorremos la lista de aeropuertos de forma básica, como hemos visto en clase
+    while i < len(lista_aeropuertos) and not encontrado:
+        aeropuerto = lista_aeropuertos[i]
+
+        if aeropuerto.icao == codigo_buscado:
+            # Aquí es donde aplicamos la corrección:
+            # Usamos el atributo 'schengen' definido en la clase, no 'is_schengen'
+            estado = aeropuerto.schengen
+            encontrado = True
+
+        i = i + 1
+
+    return estado
+
+
+
 def es_valido(code, lat_str, lon_str):
     """Filtro de seguridad que valida los inputs del usuario antes de guardarlos."""
     if len(code) != 4:
@@ -486,17 +512,32 @@ def ejecutar_cargar_lebl():
 
 
 def ejecutar_cargar_vuelos():
-    """Abre Arrivals.txt y lo guarda en memoria."""
+    """Abre Arrivals.txt de forma robusta y actualiza la interfaz."""
     global lista_llegadas
-    lista_llegadas = LoadArrivals("Arrivals.txt")
-    mostrar_notificacion("Éxito: Arrivals.txt cargado correctamente en memoria.")
+    # Llamamos a la lógica LoadArrivals
+    exito, nuevos_vuelos = LoadArrivals("Arrivals.txt")
+
+    if exito:
+        lista_llegadas = nuevos_vuelos
+        label_info.config(
+            text="ÉXITO: 'Arrivals.txt' cargado. " + str(len(lista_llegadas)) + " vuelos.", fg="green")
+    else:
+        label_info.config(
+            text="ERROR: No se encontró 'Arrivals.txt'.", fg="red")
 
 
 def ejecutar_cargar_salidas():
-    """Abre Departures.txt y lo guarda en memoria."""
+    """Abre Departures.txt de forma robusta y actualiza la interfaz."""
     global lista_salidas
-    lista_salidas = LoadDepartures("Departures.txt")
-    mostrar_notificacion("Éxito: Departures.txt cargado. " + str(len(lista_salidas)) + " salidas.")
+    exito, nuevas_salidas = LoadDepartures("Departures.txt")
+
+    if exito:
+        lista_salidas = nuevas_salidas
+        label_info.config(
+            text="ÉXITO: 'Departures.txt' cargado. " + str(len(lista_salidas)) + " salidas.", fg="green")
+    else:
+        label_info.config(
+            text="ERROR: No se encontró 'Departures.txt'.", fg="red")
 
 
 def ejecutar_unificar_movimientos():
@@ -511,13 +552,17 @@ def ejecutar_unificar_movimientos():
 
 
 def ejecutar_mapa_vuelos():
-    """Genera KML de líneas de vuelo usando Haversine internamente."""
+    """Genera KML de todas las líneas de vuelo y lo abre."""
     global lista_movimientos_merged, lista_aeropuertos
+
     if len(lista_movimientos_merged) == 0 or len(lista_aeropuertos) == 0:
-        mostrar_notificacion("Atención: Faltan Aeropuertos o Movimientos.")
+        # Usamos la función de notificación o config de marco
+        label_info.config(text="Atención: Faltan Aeropuertos o Movimientos.", fg="red")
     else:
-        MapFlights(lista_movimientos_merged, lista_aeropuertos)
-        if os.path.exists("flights.kml"):
+        exito = MapFlights(lista_movimientos_merged, lista_aeropuertos, "flights.kml")
+
+        if exito:
+            label_info.config(text="Éxito: 'flights.kml' generado y abierto.", fg="green")
             try:
                 if hasattr(os, 'startfile'):
                     os.startfile("flights.kml")
@@ -525,20 +570,88 @@ def ejecutar_mapa_vuelos():
                     subprocess.call(["open", "-e", "flights.kml"])
             except Exception:
                 pass
-            mostrar_notificacion("Éxito: 'flights.kml' generado y abierto.")
+        else:
+            label_info.config(text="ERROR: Fallo al escribir el archivo KML.", fg="red")
+
+
+def accion_ver_vuelos_largos():
+    """Ejecuta el filtrado de vuelos largos, genera el KML y actualiza la interfaz."""
+    global lista_llegadas, lista_aeropuertos
+    # 1. Llamamos a la función de lógica para filtrar
+    resultado = LongDistanceArrivals(lista_llegadas, lista_aeropuertos)
+
+    # 2. Analizamos el resultado
+    if resultado == -1:
+        # Error: Faltan datos por cargar
+        label_info.config(
+            text="ERROR: Por favor, carga primero los aeropuertos y los vuelos antes de filtrar.",
+            fg="red")
+    elif len(resultado) == 0:
+        # No hubo error, pero la lista está vacía
+        label_info.config(
+            text="AVISO: No se ha encontrado ningún vuelo de más de 2000 km.",
+            fg="#ff8c00")  # Naranja
+    else:
+        # ¡ÉXITO! Tenemos vuelos largos.
+        label_info.config(text="ÉXITO: Generando KML de " + str(len(resultado)) + " vuelos...", fg="green")
+        # 3. Generamos el archivo físico
+        archivo_salida = "trayectorias_largas.kml"
+        exito_kml = MapFlights(resultado, lista_aeropuertos, archivo_salida)
+        # 4. Verificamos la escritura y ABRIMOS automáticamente
+        if exito_kml == True:
+            label_info.config(text="ÉXITO: Se ha creado '" + archivo_salida + "'. Abriendo en Google Earth...", fg="green")
+
+            try:
+                if hasattr(os, 'startfile'):  # Windows
+                    os.startfile(archivo_salida)
+                else:  # macOS / Linux
+                    subprocess.call(["open", archivo_salida])
+            except Exception:
+                label_info.config(
+                    text="AVISO: KML creado, pero no se pudo abrir automáticamente.", fg="#ff8c00")
+        else:
+            label_info.config(
+                text="ERROR: Falló la creación del archivo KML.", fg="red")
+
+
+def ResetAllGates(aeropuerto):
+    """Limpia todas las puertas antes de volver a asignar."""
+    i = 0
+    while i < len(aeropuerto.terminals):
+        j = 0
+        while j < len(aeropuerto.terminals[i].boarding_areas):
+            k = 0
+            while k < len(aeropuerto.terminals[i].boarding_areas[j].gates):
+                aeropuerto.terminals[i].boarding_areas[j].gates[k].occupied = False
+                aeropuerto.terminals[i].boarding_areas[j].gates[k].aircraft = ""
+                k = k + 1
+            j = j + 1
+        i = i + 1
 
 
 def ejecutar_preparar_noche():
     """Asigna manualmente aviones a primera hora del día (Aparcamiento Nocturno)."""
-    global objeto_lebl, lista_movimientos_merged
+    global objeto_lebl, lista_movimientos_merged, lista_aeropuertos
+
     if objeto_lebl == None or len(lista_movimientos_merged) == 0:
         mostrar_notificacion("Atención: Estructura cargada y Movimientos requeridos.")
         return
 
+    ResetAllGates(objeto_lebl)
+
     lista_nocturnos = NightAircraft(lista_movimientos_merged)
+
+    if lista_nocturnos != -1 and len(lista_nocturnos) > 0:
+        for ac in lista_nocturnos:
+            # Comprobamos el destino de este avión para saber si va a zona Schengen
+            ac.is_schengen = ObtenerEstadoSchengen(ac.destination)
+
+    # Ahora sí, los enviamos a aparcar con su estado actualizado
     AssignNightGates(objeto_lebl, lista_nocturnos)
+
     ActualizarDiagramaVisual(objeto_lebl)
     mostrar_notificacion("Éxito: Aviones nocturnos posicionados.")
+
 
 
 def ejecutar_simular_hora():
@@ -608,18 +721,29 @@ tk.Button(marco_gestion, text="Guardar solo Schengen", width=38, pady=6, bg=COLO
 marco_lebl = tk.LabelFrame(frame_izquierdo, text=" 3. Procesamiento Dinámico LEBL ", font=("Arial", 10, "bold"),
                            bg=COLOR_BG, fg="#000000", padx=5, pady=5)
 marco_lebl.pack(pady=5, fill="x")
+# Mantenemos el Cargar Estructura arriba
 tk.Button(marco_lebl, text="Cargar Estructura", width=38, pady=6, bg=COLOR_BTN_NEUTRAL,
           font=("Arial", 9, "bold"), command=ejecutar_cargar_lebl).grid(row=0, column=0, columnspan=2, pady=3)
+
+# Fila 1: Arrivals y Departures (Correcto)
 tk.Button(marco_lebl, text="Cargar Arrivals", width=18, pady=6, bg=COLOR_BTN_NEUTRAL, font=("Arial", 9, "bold"),
           command=ejecutar_cargar_vuelos).grid(row=1, column=0, padx=4, pady=3)
 tk.Button(marco_lebl, text="Cargar Departures", width=18, pady=6, bg=COLOR_BTN_NEUTRAL,
           font=("Arial", 9, "bold"), command=ejecutar_cargar_salidas).grid(row=1, column=1, padx=4, pady=3)
-tk.Button(marco_lebl, text="Fusionar (Merge)", width=18, pady=6, bg=COLOR_BTN_PRIMARY, font=("Arial", 9, "bold"),
-          command=ejecutar_unificar_movimientos).grid(row=2, column=0, padx=4, pady=4)
-tk.Button(marco_lebl, text="Mapa Rutas Vuelo", width=18, pady=6, bg=COLOR_BTN_PRIMARY, font=("Arial", 9, "bold"),
-          command=ejecutar_mapa_vuelos).grid(row=2, column=1, padx=4, pady=4)
+
+# Fila 2: Fusionar (Ahora tiene su propia fila o espacio dedicado)
+tk.Button(marco_lebl, text="Fusionar (Merge)", width=38, pady=6, bg=COLOR_BTN_PRIMARY, font=("Arial", 9, "bold"),
+          command=ejecutar_unificar_movimientos).grid(row=2, column=0, columnspan=2, padx=4, pady=4)
+
+# Fila 3: Mapas (Los dos juntos)
+tk.Button(marco_lebl, text="Mapa: Todas Rutas", width=18, pady=6, bg=COLOR_BTN_PRIMARY, font=("Arial", 9, "bold"),
+          command=ejecutar_mapa_vuelos).grid(row=3, column=0, padx=4, pady=4)
+tk.Button(marco_lebl, text="Mapa: Rutas Largas", width=18, pady=6, bg=COLOR_BTN_PRIMARY, font=("Arial", 9, "bold"),
+          command=accion_ver_vuelos_largos).grid(row=3, column=1, padx=4, pady=4)
+
+# Fila 4: Posicionar Noche (Al final, bien separado)
 tk.Button(marco_lebl, text="4. Posicionar Noche", width=38, pady=6, bg=COLOR_BTN_SUCCESS, font=("Arial", 9, "bold"),
-          command=ejecutar_preparar_noche).grid(row=3, column=0, columnspan=2, pady=4)
+          command=ejecutar_preparar_noche).grid(row=4, column=0, columnspan=2, pady=4)
 
 marco_simulacion = tk.LabelFrame(frame_izquierdo, text=" 4. Línea de Tiempo / Análisis Activo ",
                                  font=("Arial", 10, "bold"), bg=COLOR_BG, fg="#000000", padx=5, pady=5)
