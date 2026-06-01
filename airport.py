@@ -1,43 +1,35 @@
+"""
+MÓDULO AIRPORT.PY (Fundación y Geografía)
+Este archivo contiene la clase base para los aeropuertos y todas las herramientas 
+matemáticas y geográficas asociadas (conversión de coordenadas, mapas KML).
+Actúa como la base de datos de ubicaciones mundiales.
+"""
+
 import matplotlib.pyplot as plt
 
+
+# =============================================================================
+# DEFINICIÓN DE CLASES
+# =============================================================================
 class Airport:
-    # Clase que representa un aeropuerto con código, coordenadas y si es Schengen
+    """
+    Clase que representa un aeropuerto genérico en el mundo.
+    Guarda su código de identificación, dónde está en el mapa, 
+    y si pertenece al espacio de libre circulación europeo (Schengen).
+    """
+
     def __init__(self, icao, lat, lon):
         self.icao = icao
-        self.coordinates = (lat, lon)
-        self.schengen = False
-
-class Gate:
-    def __init__(self, name):
-        self.name = name
-        self.occupied = False
-        self.aircraft_id = ""
-
-class BoardingArea:
-    def __init__(self, name, area_type):
-        self.name = name
-        self.type = area_type  # 'Schengen' o 'non-Schengen'
-        self.gates = []
-
-class Terminal:
-    def __init__(self, name):
-        self.name = name
-        self.boarding_areas = []
-        self.airlines = []
-
-class BarcelonaAP:
-    def __init__(self, code):
-        self.code = code
-        self.terminals = []
-
-
-def SetGates(area, init_gate, end_gate, prefix):
-    for i in range(init_gate, end_gate + 1):
-        nueva_gate = Gate(prefix + str(i))
-        area.gates.append(nueva_gate)
+        self.coordinates = (lat, lon)  # Tupla con Latitud y Longitud en grados decimales
+        self.schengen = False  # Por defecto asumimos que no es Schengen
 
 
 def LoadAirlines(terminal, t_name):
+    """
+    IMPORTANTE: Aunque esta función está aquí, pertenece conceptualmente a LEBL.py.
+    Abre un archivo (Ej: 'T1_Airlines.txt') que está separado por tabuladores ('\t')
+    y guarda el código de la aerolínea en la terminal correspondiente.
+    """
     f = open(t_name + "_Airlines.txt", "r")
     lines = f.readlines()
     f.close()
@@ -49,95 +41,57 @@ def LoadAirlines(terminal, t_name):
                 terminal.airlines.append(partes[1])
 
 
-def LoadAirportStructure(filename):
-    f = open(filename, "r")
-    lines = f.readlines()
-    f.close()
+# =============================================================================
+# LÓGICA SCHENGEN
+# =============================================================================
 
-    bcn = BarcelonaAP(lines[0].split()[0])
-    i = 1
-    while i < len(lines):
-        linea = lines[i].strip()
-        if linea.startswith("Terminal"):
-            partes = linea.split()
-            nueva_t = Terminal(partes[1])
-            LoadAirlines(nueva_t, partes[1])
-            num_areas = int(partes[2])
-            for j in range(1, num_areas + 1):
-                la = lines[i + j].strip().split()
-                area_obj = BoardingArea(la[1], la[2])
-                SetGates(area_obj, int(la[4]), int(la[5]), partes[1] + la[1])
-                nueva_t.boarding_areas.append(area_obj)
-            bcn.terminals.append(nueva_t)
-            i += num_areas + 1
-        else:
-            i += 1
-    return bcn
-
-
-def AssignGate(bcn, flight_airline, is_schengen):
-    # Buscamos en qué terminal está la aerolínea
-    t_dest = ""
-    for i in range(len(bcn.terminals)):
-        for j in range(len(bcn.terminals[i].airlines)):
-            if bcn.terminals[i].airlines[j] == flight_airline:
-                t_dest = bcn.terminals[i]
-
-    if t_dest == "": return "Terminal no encontrada"
-
-    # Buscamos puerta libre en zona correcta
-    tipo_buscado = "Schengen" if is_schengen else "non-Schengen"
-    for i in range(len(t_dest.boarding_areas)):
-        area = t_dest.boarding_areas[i]
-        if area.type == tipo_buscado:
-            for j in range(len(area.gates)):
-                if not area.gates[j].occupied:
-                    area.gates[j].occupied = True
-                    return area.gates[j].name
-    return "No hay puertas libres"
-# --------------------------------------------------
-# SCHENGEN
-# --------------------------------------------------
-
-# Comprueba si un código ICAO pertenece a un país Schengen
 def IsSchengenAirport(code):
-
+    """
+    Comprueba si el código ICAO pertenece a un país del tratado Schengen.
+    La lógica se basa en analizar las 2 primeras letras del código (Ej: 'LE' = España).
+    """
     if not code:
         return False
 
-    # Prefijos ICAO de países Schengen
+    # Lista de prefijos ICAO de países europeos Schengen
     schengen_prefixes = [
         'LO', 'EB', 'LK', 'LC', 'EK', 'EE', 'EF', 'LF', 'ED', 'LG',
         'EH', 'LH', 'BI', 'LI', 'EV', 'EY', 'EL', 'LM', 'EN', 'EP',
         'LP', 'LZ', 'LJ', 'LE', 'ES', 'LS'
     ]
 
+    # code[:2] extrae exactamente los dos primeros caracteres del string
     return code[:2] in schengen_prefixes
 
-# Asigna al aeropuerto si es Schengen o no
+
 def SetSchengen(airport):
+    """Actualiza el atributo interno del objeto Airport usando nuestra función de comprobación."""
     airport.schengen = IsSchengenAirport(airport.icao)
 
-# Imprime por pantalla los datos de un aeropuerto
+
 def PrintAirport(airport):
+    """Función de depuración (debug) para imprimir en consola los datos de un objeto."""
     print("ICAO:", airport.icao)
     print("Coordinates:", airport.coordinates)
     print("Schengen:", airport.schengen)
     print()
 
-# --------------------------------------------------
-# FILE FUNCTIONS
-# --------------------------------------------------
 
-# Carga aeropuertos desde un fichero y crea objetos Airport
+# =============================================================================
+# FUNCIONES DE FICHERO (Lectura/Escritura)
+# =============================================================================
+
 def LoadAirports(filename):
-
+    """
+    Lee el archivo principal de aeropuertos mundiales.
+    Llama internamente a 'ConvertCoord' para traducir las coordenadas de texto a matemáticas.
+    """
     airports = []
 
     try:
         file = open(filename, "r")
     except:
-        return airports
+        return airports  # Retorna lista vacía si el archivo no existe
 
     lines = file.readlines()
     file.close()
@@ -145,17 +99,18 @@ def LoadAirports(filename):
     for line in lines:
         line = line.strip()
 
-        # Ignora líneas vacías o cabecera
+        # Ignoramos líneas vacías o la cabecera que empieza por "CODE"
         if not line or line.startswith("CODE"):
             continue
 
         parts = line.split()
 
-        # Debe tener exactamente 3 campos
+        # Control de seguridad: Si la línea no tiene 3 trozos, está corrupta y la saltamos
         if len(parts) != 3:
             continue
 
         code = parts[0]
+        # Convertimos texto a número decimal para poder calcular distancias luego
         lat = ConvertCoord(parts[1])
         lon = ConvertCoord(parts[2])
 
@@ -164,18 +119,21 @@ def LoadAirports(filename):
 
     return airports
 
-# Guarda en un fichero solo los aeropuertos Schengen
-def SaveSchengenAirports(airports, filename):
 
+def SaveSchengenAirports(airports, filename):
+    """
+    Filtra la lista y guarda físicamente en un TXT solo aquellos 
+    aeropuertos que sean Schengen, devolviendo las coordenadas a su formato texto original.
+    """
     if not airports:
         return -1
 
     file = open(filename, "w")
-
     file.write("CODE LAT LON\n")
 
     for airport in airports:
         if airport.schengen:
+            # Reconversión a texto (Ej: N412345)
             lat_str = FormatCoord(airport.coordinates[0], True)
             lon_str = FormatCoord(airport.coordinates[1], False)
 
@@ -184,149 +142,177 @@ def SaveSchengenAirports(airports, filename):
     file.close()
 
 
-# --------------------------------------------------
-# LIST MANAGEMENT
-# --------------------------------------------------
+# =============================================================================
+# GESTIÓN DE LISTAS
+# =============================================================================
 
-# Añade un aeropuerto a la lista si no existe ya
 def AddAirport(airports, airport):
-
+    """Añade un aeropuerto comprobando antes que no exista un duplicado (Mismo ICAO)."""
     for a in airports:
         if a.icao == airport.icao:
             return
-
     airports.append(airport)
 
-# Elimina un aeropuerto de la lista por su código ICAO
-def RemoveAirport(airports, code):
 
+def RemoveAirport(airports, code):
+    """Busca un aeropuerto por ICAO y lo extrae de la lista global."""
     for a in airports:
         if a.icao == code:
             airports.remove(a)
             return
+    return -1  # Devuelve -1 si no lo encontró
 
-    return -1
 
+# =============================================================================
+# GRÁFICOS MATPLOTLIB
+# =============================================================================
 
-# --------------------------------------------------
-# PLOT
-# --------------------------------------------------
-
-# Muestra una gráfica con número de aeropuertos Schengen vs No Schengen
 def PlotAirports(airports):
+    """
+    Genera un gráfico de barras apilado (Stacked Bar) mostrando la proporción
+    de aeropuertos Schengen vs No Schengen usando la librería matplotlib.
+    """
+    # Validamos si la lista está vacía
+    if len(airports) == 0:
+        print("No hay datos")
+    else:
+        # Inicializamos los contadores
+        schengen_count = 0
+        no_schengen_count = 0
 
-    if not airports:
-        print("No data to plot")
-        return
+        # Usamos un bucle while básico para recorrer la lista
+        i = 0
+        while i < len(airports):
+            if airports[i].schengen == True:
+                schengen_count = schengen_count + 1
+            else:
+                no_schengen_count = no_schengen_count + 1
 
-    schengen_count = sum(1 for a in airports if a.schengen)
-    no_schengen_count = len(airports) - schengen_count
+            # Incrementamos el índice
+            i = i + 1
 
     labels = ['Airports']
-
     fig, ax = plt.subplots(figsize=(6, 5))
 
+    # Barra base (Schengen)
     ax.bar(labels, [schengen_count], label='Schengen')
-    ax.bar(labels, [no_schengen_count],
-           bottom=[schengen_count],
-           label='No Schengen')
+    # Barra superior (No Schengen) colocada mediante el parámetro 'bottom'
+    ax.bar(labels, [no_schengen_count], bottom=[schengen_count], label='No Schengen')
 
     ax.set_ylabel('Count')
     ax.set_title('Schengen airports')
     ax.legend()
-
     plt.show()
 
 
-# --------------------------------------------------
-# MAP (KML)
-# --------------------------------------------------
+# =============================================================================
+# MAPAS KML (Google Earth)
+# =============================================================================
 
-# Genera un archivo KML para visualizar aeropuertos en Google Earth
 def MapAirports(airports):
-
+    """
+    Genera un archivo XML con formato KML. Este archivo lo lee Google Earth
+    para poner 'chinchetas' (Placemarks) en el globo terráqueo.
+    """
     if not airports:
         print("Error: empty list")
         return
 
     file = open("airports.kml", "w")
 
+    # Cabeceras estándar de un archivo KML
     file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     file.write('<kml xmlns="http://www.opengis.net/kml/2.2">\n')
     file.write('<Document>\n')
 
     for airport in airports:
-
         lat = airport.coordinates[0]
         lon = airport.coordinates[1]
 
+        # Condicional clásico de color: Schengen = Rojo, No Schengen = Verde
         if airport.schengen:
-            color = "ff0000ff"  # rojo
+            color = "ff0000ff"
         else:
-            color = "ff00ff00"  # verde
+            color = "ff00ff00"
 
+            # Estructura obligatoria de Google Earth por cada punto en el mapa
         file.write('<Placemark>\n')
         file.write(f'<name>{airport.icao}</name>\n')
         file.write('<Style><IconStyle>\n')
         file.write(f'<color>{color}</color>\n')
         file.write('</IconStyle></Style>\n')
         file.write('<Point>\n')
+        # Google Earth usa el formato LONGITUD, LATITUD (al revés que Google Maps)
         file.write(f'<coordinates>{lon},{lat},0</coordinates>\n')
         file.write('</Point>\n')
         file.write('</Placemark>\n')
 
+    # Cierre de las etiquetas
     file.write('</Document>\n')
     file.write('</kml>\n')
-
     file.close()
 
     print("File airports.kml created.")
 
 
-# --------------------------------------------------
-# COORDINATE FUNCTIONS
-# --------------------------------------------------
+# =============================================================================
+# MATEMÁTICAS DE COORDENADAS
+# =============================================================================
 
-# Convierte coordenadas de formato texto (N412345) a decimal (41.3958)
 def ConvertCoord(coord):
+    """
+    Convierte un string de formato sexagesimal (ej: N412345) a un decimal puro (41.3958).
+    Fórmula: Grados + (Minutos / 60) + (Segundos / 3600)
+    """
+    direction = coord[0]  # N, S, E, W
+    value = coord[1:]  # El resto de los números
 
-    direction = coord[0]
-    value = coord[1:]
-
-    if len(value) == 6:  # latitud
+    # Si tiene 6 números es Latitud (DDMMSS)
+    if len(value) == 6:
         degrees = int(value[0:2])
         minutes = int(value[2:4])
         seconds = int(value[4:6])
-    else:  # longitud
+    # Si tiene 7 números es Longitud (DDDMMSS) porque los grados pueden ser hasta 180
+    else:
         degrees = int(value[0:3])
         minutes = int(value[3:5])
         seconds = int(value[5:7])
 
     decimal = degrees + minutes / 60 + seconds / 3600
 
-    # Sur y Oeste son negativos
+    # Por convención matemática, el Sur y el Oeste son coordenadas negativas en el plano cartesiano
     if direction in ['S', 'W']:
         decimal = -decimal
 
-    return decimal  # 🔥 MUY IMPORTANTE
+    return decimal
 
-# Convierte coordenadas decimales a formato texto (N412345)
+
 def FormatCoord(value, is_lat):
-
+    """
+    Hace la operación matemática inversa a ConvertCoord.
+    Pasa de un decimal puro (ej: 41.3958) a formato texto (N412345).
+    """
+    # Determinamos la letra de dirección
     if is_lat:
         direction = 'N' if value >= 0 else 'S'
     else:
         direction = 'E' if value >= 0 else 'W'
 
-    value = abs(value)
+    value = abs(value)  # Trabajamos con valor absoluto para los cálculos
 
+    # Extraemos la parte entera (Grados)
     degrees = int(value)
+
+    # Extraemos la parte decimal, la pasamos a minutos y separamos la parte entera
     minutes_full = (value - degrees) * 60
     minutes = int(minutes_full)
+
+    # El resto decimal de los minutos lo pasamos a segundos
     seconds = int((minutes_full - minutes) * 60)
 
+    # El formato {:02d} asegura que siempre se pongan ceros a la izquierda si el número es < 10
     if is_lat:
         return f"{direction}{degrees:02d}{minutes:02d}{seconds:02d}"
     else:
+        # La longitud usa 3 ceros a la izquierda para los grados
         return f"{direction}{degrees:03d}{minutes:02d}{seconds:02d}"
-
