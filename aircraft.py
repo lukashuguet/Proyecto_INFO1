@@ -165,7 +165,7 @@ def MapFlights(lista_vuelos, lista_aeropuertos, filename):
         file.write('</Document>\n')
         file.write('</kml>\n')
         file.close()
-        return True  # Todo ha ido bien
+        return True  # Perfecto
 
     except Exception:
         # Si falla el 'open' o cualquier escritura, informamos de error
