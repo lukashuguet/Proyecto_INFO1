@@ -1,5 +1,7 @@
 # Proyecto Aeropuerto
 
+link al video final del proyecto: 
+
 # Versión 1
 
 Esta versión del proyecto consiste en el desarrollo de una herramienta para la gestión y visualización de datos aeroportuarios internacionales, centrada específicamente en la identificación del espacio Schengen. El sistema se construye con la creación de una clase base que almacena el código ICAO de cuatro caracteres, las coordenadas geográficas en formato decimal y un indicador booleano de pertenencia a la zona Schengen. Esta clasificación se realiza automáticamente mediante una lógica de filtrado que analiza los dos primeros caracteres del código ICAO, comparándolos con una lista oficial de prefijos de países firmantes del acuerdo.
