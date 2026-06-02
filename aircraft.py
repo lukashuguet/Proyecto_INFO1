@@ -86,7 +86,6 @@ def LoadArrivals(filename):
 def SaveFlights(aircrafts, filename):
     """
     Guarda la lista de aviones en un archivo .txt.
-    Utiliza concatenación de strings clásica (con '+') muy valorada en cursos básicos.
     """
     if len(aircrafts) == 0:
         return -1
@@ -272,10 +271,6 @@ def LoadDepartures(filename):
         return False, []
 
     except Exception as e:
-
-        # AQUÍ ESTÁ LA CLAVE: Imprimimos el error real en la consola
-
-        print(f"DEBUG ERROR OCULTO EN SALIDAS: {e}")
 
         import traceback
 

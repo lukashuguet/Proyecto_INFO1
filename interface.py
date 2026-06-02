@@ -70,16 +70,18 @@ pestana_control = tk.Frame(notebook, bg=COLOR_BG)
 pestana_graficos = tk.Frame(notebook, bg=COLOR_BG)
 pestana_grafico1 = tk.Frame(notebook, bg=COLOR_BG)  # Detalle Llegadas
 pestana_grafico2 = tk.Frame(notebook, bg=COLOR_BG)  # Detalle Aerolíneas
-pestana_grafico3 = tk.Frame(notebook, bg=COLOR_BG)  # Detalle Schengen
-pestana_grafico4 = tk.Frame(notebook, bg=COLOR_BG)  # Detalle Ocupación 24h
+pestana_grafico3 = tk.Frame(notebook, bg=COLOR_BG)  # Detalle Aviones Schengen
+pestana_grafico4 = tk.Frame(notebook, bg=COLOR_BG)  # Detalle Aeropuertos Schengen
+pestana_grafico5 = tk.Frame(notebook, bg=COLOR_BG)  # Detalle Ocupación 24h
 
 # 3. Añadimos los Frames al menú superior visible
 notebook.add(pestana_control, text=" Panel de Control ")
 notebook.add(pestana_graficos, text=" Dashboard General ")
 notebook.add(pestana_grafico1, text=" Llegadas/Hora ")
 notebook.add(pestana_grafico2, text=" Vuelos/Aerolínea ")
-notebook.add(pestana_grafico3, text=" Schengen ")
-notebook.add(pestana_grafico4, text=" Ocupación 24h ")
+notebook.add(pestana_grafico3, text=" Aviones Schengen ")
+notebook.add(pestana_grafico4, text=" Aeropuertos Schengen ")
+notebook.add(pestana_grafico5, text=" Ocupación 24h ")
 
 # --- DISEÑO DE LA PESTAÑA 1 (CONTROL) - USANDO GRID ---
 # Dividimos la pestaña principal en dos columnas. La derecha (diagrama) es más ancha.
@@ -93,23 +95,33 @@ frame_izquierdo.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 frame_derecho = tk.Frame(pestana_control, bg=COLOR_BG)
 frame_derecho.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
 
-# --- DISEÑO DE LA PESTAÑA 2 (DASHBOARD GENERAL) - 4 CUADRANTES ---
+# --- NUEVO DISEÑO DE LA PESTAÑA 2 (DASHBOARD GENERAL) - 2x2 + 1 ANCHO ABAJO ---
 pestana_graficos.columnconfigure(0, weight=1, uniform="grupo1")
 pestana_graficos.columnconfigure(1, weight=1, uniform="grupo1")
+
 pestana_graficos.rowconfigure(0, weight=1, uniform="grupo1")
 pestana_graficos.rowconfigure(1, weight=1, uniform="grupo1")
+pestana_graficos.rowconfigure(2, weight=1, uniform="grupo1") # Fila para el gráfico ancho
 
+# --- FILA 0: Bloque Superior del 2x2 ---
 marco_grafico_1 = tk.Frame(pestana_graficos, bg=COLOR_BG, bd=2, relief="groove")
 marco_grafico_1.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
 
-marco_grafico_2 = tk.Frame(pestana_graficos, bg=COLOR_BG, bd=2, relief="groove")
-marco_grafico_2.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
-
 marco_grafico_3 = tk.Frame(pestana_graficos, bg=COLOR_BG, bd=2, relief="groove")
-marco_grafico_3.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+marco_grafico_3.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
 
+# --- FILA 1: Bloque Medio del 2x2 ---
 marco_grafico_4 = tk.Frame(pestana_graficos, bg=COLOR_BG, bd=2, relief="groove")
-marco_grafico_4.grid(row=1, column=1, sticky="nsew", padx=5, pady=5)
+marco_grafico_4.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+
+# Este es el nuevo contenedor en el Dashboard para la ocupación de 24h
+marco_grafico_5 = tk.Frame(pestana_graficos, bg=COLOR_BG, bd=2, relief="groove")
+marco_grafico_5.grid(row=1, column=1, sticky="nsew", padx=5, pady=5)
+
+# --- FILA 2: Bloque Inferior Completo (Ancho) ---
+# El marco_grafico_2 (Vuelos por Aerolínea) se expande con columnspan=2
+marco_grafico_2 = tk.Frame(pestana_graficos, bg=COLOR_BG, bd=2, relief="groove")
+marco_grafico_2.grid(row=2, column=0, columnspan=2, sticky="nsew", padx=5, pady=5)
 
 # =============================================================================
 # MONITOR GRÁFICO DERECHO (DIBUJO DE TERMINALES)
@@ -432,32 +444,45 @@ def ejecutar_validar():
 
 
 def ejecutar_analisis_completo():
-    """Genera las gráficas de Matplotlib tanto para el Dashboard como individuales."""
-    global lista_movimientos_merged
+    """Genera las 5 gráficas de Matplotlib tanto para el Dashboard como individuales."""
+    global lista_movimientos_merged, objeto_lebl
+
+    # Validación básica requerida en tus apuntes
     if len(lista_movimientos_merged) == 0:
         mostrar_notificacion("Atención: Debes cargar y fusionar movimientos primero.")
         return
+    if objeto_lebl == None:
+        mostrar_notificacion("Atención: Estructura del aeropuerto LEBL requerida para ocupación.")
+        return
 
+    # ==========================================
     # 1. Gráficos para el Dashboard General
+    # ==========================================
     fig1 = PlotArrivalsPerHour(lista_movimientos_merged)
-    fig2 = PlotFlightsPerAirline(lista_movimientos_merged)
+    fig2 = PlotFlightsPerAirline(lista_movimientos_merged)  # Este irá abajo
     fig3 = PlotSchengenProportion(lista_movimientos_merged)
+    fig4 = PlotAirports(lista_aeropuertos)  # Nueva gráfica
 
     incrustar_grafico(fig1, marco_grafico_1)
     incrustar_grafico(fig2, marco_grafico_2)
     incrustar_grafico(fig3, marco_grafico_3)
+    incrustar_grafico(fig4, marco_grafico_4)
 
-    # 2. Gráficos para las Pestañas Individuales (Matplotlib necesita figuras nuevas)
+    # ==========================================
+    # 2. Gráficos para las Pestañas Individuales
+    # ==========================================
     fig1_ind = PlotArrivalsPerHour(lista_movimientos_merged)
     fig2_ind = PlotFlightsPerAirline(lista_movimientos_merged)
     fig3_ind = PlotSchengenProportion(lista_movimientos_merged)
+    fig4_ind = PlotAirports(lista_aeropuertos)
 
     incrustar_grafico(fig1_ind, pestana_grafico1)
     incrustar_grafico(fig2_ind, pestana_grafico2)
     incrustar_grafico(fig3_ind, pestana_grafico3)
+    incrustar_grafico(fig4_ind, pestana_grafico4)
 
     notebook.select(pestana_graficos)  # Cambia la vista automáticamente
-    mostrar_notificacion("Éxito: Análisis estadístico generado. Pestañas actualizadas.")
+    mostrar_notificacion("Éxito: Análisis estadístico completo generado con distribución 2x2+1.")
 
 
 def ejecutar_plot_ocupacion_completa():
@@ -467,13 +492,13 @@ def ejecutar_plot_ocupacion_completa():
         mostrar_notificacion("Atención: Estructura y movimientos requeridos.")
         return
 
-    fig4 = PlotDayOccupancy(objeto_lebl, lista_movimientos_merged)
-    incrustar_grafico(fig4, marco_grafico_4)
+    fig5 = PlotDayOccupancy(objeto_lebl, lista_movimientos_merged)
+    incrustar_grafico(fig5, marco_grafico_5)
 
-    fig4_ind = PlotDayOccupancy(objeto_lebl, lista_movimientos_merged)
-    incrustar_grafico(fig4_ind, pestana_grafico4)
+    fig5_ind = PlotDayOccupancy(objeto_lebl, lista_movimientos_merged)
+    incrustar_grafico(fig5_ind, pestana_grafico5)
 
-    notebook.select(pestana_grafico4)
+    notebook.select(pestana_grafico5)
     mostrar_notificacion("Éxito: Gráfica de ocupación diaria generada.")
 
 
@@ -792,13 +817,15 @@ scrollbar_tabla.pack(side="right", fill="y")
 # Antes de cargar datos, ponemos los textos de "Esperando datos..." en todos los lienzos
 crear_placeholder(marco_grafico_1, "Llegadas por Hora")
 crear_placeholder(marco_grafico_2, "Vuelos por Aerolínea")
-crear_placeholder(marco_grafico_3, "Proporción Schengen")
-crear_placeholder(marco_grafico_4, "Ocupación Diaria de Terminales")
+crear_placeholder(marco_grafico_3, "Proporción Aviones")
+crear_placeholder(marco_grafico_4, "Proporción Aeropuertos")
+crear_placeholder(marco_grafico_5, "Ocupación Diaria de Terminales")
 
 crear_placeholder(pestana_grafico1, "Llegadas por Hora (Detalle)")
 crear_placeholder(pestana_grafico2, "Vuelos por Aerolínea (Detalle)")
-crear_placeholder(pestana_grafico3, "Proporción Schengen (Detalle)")
-crear_placeholder(pestana_grafico4, "Ocupación Diaria (Detalle)")
+crear_placeholder(pestana_grafico3, "Proporción Aviones (Detalle)")
+crear_placeholder(pestana_grafico4, "Proporción Aeropuertos (Detalle)")
+crear_placeholder(pestana_grafico5, "Ocupación Diaria (Detalle)")
 
 # El "mainloop" es lo que mantiene la ventana abierta esperando que el usuario haga clic.
 root.mainloop()

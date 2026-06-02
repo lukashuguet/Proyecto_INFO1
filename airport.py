@@ -24,23 +24,6 @@ class Airport:
         self.schengen = False  # Por defecto asumimos que no es Schengen
 
 
-def LoadAirlines(terminal, t_name):
-    """
-    IMPORTANTE: Aunque esta función está aquí, pertenece conceptualmente a LEBL.py.
-    Abre un archivo (Ej: 'T1_Airlines.txt') que está separado por tabuladores ('\t')
-    y guarda el código de la aerolínea en la terminal correspondiente.
-    """
-    f = open(t_name + "_Airlines.txt", "r")
-    lines = f.readlines()
-    f.close()
-    for i in range(len(lines)):
-        linea = lines[i].strip()
-        if linea:
-            partes = linea.split('\t')
-            if len(partes) > 1:
-                terminal.airlines.append(partes[1])
-
-
 # =============================================================================
 # LÓGICA SCHENGEN
 # =============================================================================
@@ -202,7 +185,8 @@ def PlotAirports(airports):
     ax.set_ylabel('Count')
     ax.set_title('Schengen airports')
     ax.legend()
-    plt.show()
+
+    return fig
 
 
 # =============================================================================
